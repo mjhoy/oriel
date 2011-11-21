@@ -118,7 +118,7 @@
       var self = this,
           options, wrapper, stage, placeholder, source;
 
-      el = $( el ).addClass( domClass.sshow ).css( {position: 'relative'} );
+      el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
       this.el = el;
       options = this.options = $.extend( defaultOptions, ( opts || {} ) );
 
@@ -146,7 +146,7 @@
       // no JavaScript running.
       if ( $( source ).find( 'a' ).length > 0 ) {
         $( source ).find( 'a' ).each( function() {
-          var ln = $( this), // The anchor element
+          var ln = $( this ), // The anchor element
               src = ln.attr( 'href' ),
               caption;
 
@@ -156,7 +156,6 @@
           if ( $.isFunction( options.getCaption ) ) { 
             self.captions.push( options.getCaption.call( this, ln ) );
           }
-
         });
       } else {
       // Just look for all images, and use the `src` attribute as the
@@ -214,19 +213,19 @@
         // If it's a new image, fade out the old one.
         if ( !same ) {
           $( placeholder + ' img.active', el ).fadeOut( 100, function() {
-            $( this ).css( {opacity: 0.0} );
+            $( this ).css( { opacity: 0.0 } );
           });
           $( placeholder + ' img', el ).removeClass( 'active' );
         } 
 
         // Get the new image.
-        _currentImage = $( placeholder + ' img[src="' + href + '"]' ).
-          addClass( 'active' ).css( {display: 'inline'} );
+        _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).
+          addClass( 'active' ).css( { display: 'inline' } );
 
         if ( same ) {
-          _currentImage.css( {opacity: 1.0} );
+          _currentImage.css( { opacity: 1.0 } );
         } else {
-          _currentImage.animate( {opacity: 1.0}, 100 );
+          _currentImage.animate( { opacity: 1.0 }, 100 );
         }
 
         // Update our status (caption and navigation text)
@@ -253,14 +252,14 @@
           _newImage, _i, _l, _attr;
 
       // Check whether this image exists already.
-      if ( $( placeholder + ' img[src="' + href + '"]' ).length === 0 ) {
+      if ( $( placeholder + ' img[src="' + href + '"]', el ).length === 0 ) {
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
           appendTo( $( placeholder ) ).css( {
-            position: 'absolute',
-            display : 'none',
-            opacity : 0
+            position : 'absolute',
+            display  : 'none',
+            opacity  : 0
           } ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
 
         // Copy any "data-" attributes from the original link to the image.
