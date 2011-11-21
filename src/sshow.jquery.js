@@ -46,7 +46,7 @@
     prevLink   : 'sshow_prevLink'
   };
 
-  // Same as `domClass` but with the hash in front.
+  // Same as `domClass` but with the dot in front, for CSS selectors.
   var sel = (function () {
     var obj = {};
     $.each(domClass, function (k, v) {
