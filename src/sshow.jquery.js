@@ -84,6 +84,24 @@
   };
 
   Sshow = function () {
+    // Options are provided to the `init` method.
+    this.options = {};
+
+    // The `el` variable contains the jQuery-wrapped DOM element.
+    this.el = undefined;
+
+    // Current index displaying.
+    this.currentIndex = 0;
+
+    // Array of URLs to the full-sized (non-thumbnail) images.
+    this.fulls  = [];
+
+    // Array of URLs to thumbnail images.
+    this.thumbs = [];
+
+    // References the original elements if they are anchors to
+    // full-sized images.
+    this.originalElements = [];
   };
 
   $.extend(Sshow.prototype, {
@@ -93,7 +111,7 @@
 
       el = $(el).addClass(domClass.sshow);
       this.el = el;
-      options = $.extend(defaultOptions, (opts || {}));
+      options = this.options = $.extend(defaultOptions, (opts || {}));
 
       // The overall wrapper.
       wrapper = $("<div class='" + domClass.wrapper + "'></div>");
