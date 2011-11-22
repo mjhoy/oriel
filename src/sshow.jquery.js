@@ -240,10 +240,6 @@
       return this;
     },
 
-    setBySrc : function ( src ) {
-
-    },
-
     load : function ( index ) {
       var href = this.fulls[index],
           orig = this.originalElements[index],
