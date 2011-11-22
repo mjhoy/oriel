@@ -115,20 +115,17 @@
 
   $.extend( Sshow.prototype, {
 
-    init : function ( el, opts ) {
-      var self = this,
-          options, wrapper, stage, placeholder, source;
+    _setupDom : function () {
 
-      el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
-      this.el = el;
-      options = this.options = $.extend( defaultOptions, ( opts || {} ) );
-
+      var options = this.options,
+          el = this.el,
+          wrapper, stage, placeholder, source;
 
       wrapper = $( '<div class="' + domClass.wrapper + '"></div>' );
       stage   = $( '<div class="' + domClass.stage + '"></div>' );
 
       el.wrapInner( '<div class="' + domClass.source + '"></div>' );
-      ss = source = $( sel.source, el );
+      source = $( sel.source, el );
       wrapper.prepend( stage );
       el.prepend( wrapper );
 
@@ -139,6 +136,14 @@
 
       placeholder = $( '<div class="' + domClass.placeholder + '"></div>' ).
         appendTo( stage );
+    },
+
+    _setupImages : function() {
+
+      var el = this.el,
+          self = this,
+          options = this.options,
+          source = $( sel.source, el );
 
       // Finding our images
       // The first type of information we look for are links that wrap
@@ -178,6 +183,19 @@
       $( source ).find( 'img' ).each( function() {
         self.thumbs.push( $( this ).attr( 'src' ) );
       });
+
+    },
+
+    init : function ( el, opts ) {
+      var self = this,
+          options;
+
+      el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
+      this.el = el;
+      options = this.options = $.extend( defaultOptions, ( opts || {} ) );
+
+      this._setupDom();
+      this._setupImages();
 
       self.set( 0 );
 
