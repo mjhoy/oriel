@@ -85,7 +85,8 @@
   var defaultOptions = {
     statusSetup : statusSetup,
     handlerSetup : handlerSetup,
-    prefetch : 3
+    prefetch : 3,
+    allowLoop : true
   };
 
   Sshow = function() {
@@ -125,9 +126,9 @@
 
       wrapper = $( '<div class="' + domClass.wrapper + '"></div>' );
       stage   = $( '<div class="' + domClass.stage + '"></div>' );
-      source  = $( '<div class="' + domClass.source + '"></div>' );
 
-      el.wrapInner( source );
+      el.wrapInner( '<div class="' + domClass.source + '"></div>' );
+      ss = source = $( sel.source, el );
       wrapper.prepend( stage );
       el.prepend( wrapper );
 
@@ -247,6 +248,7 @@
       var href = this.fulls[index],
           orig = this.originalElements[index],
           self = this,
+          el   = this.el,
           options = this.options,
           placeholder = sel.placeholder,
           _newImage, _i, _l, _attr;
@@ -264,7 +266,7 @@
 
         // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {
-          for ( _i = 0, _l = orig[0].attributes.length; i < l; i+=1 ) {
+          for ( _i = 0, _l = orig[0].attributes.length; _i < _l; _i+=1 ) {
             _attr = orig[0].attributes[_i];
             if ( _attr.name.indexOf( 'data-' ) === 0 ) {
               _newImage.attr( _attr.name, _attr.value );
@@ -289,11 +291,45 @@
     },
 
     next : function() {
-      console.log('next!');
+      var canChange = true,
+          index = this.currentIndex,
+          fulls = this.fulls,
+          allowLoop = this.options.allowLoop;
+
+      if ( index < fulls.length - 1 ) {
+        index += 1;
+      } else if ( allowLoop ) {
+        index = 0;
+      } else {
+        canChange = false;
+      }
+
+      if ( canChange ) {
+        this.set( index );
+      }
+
+      return this;
     },
 
     prev : function() {
-      console.log('prev!');
+      var canChange = true,
+          index = this.currentIndex,
+          fulls = this.fulls,
+          allowLoop = this.options.allowLoop;
+
+      if ( index > 0 ) {
+        index -= 1;
+      } else if ( allowLoop ) {
+        index = fulls.length - 1;
+      } else {
+        canChange = false;
+      }
+
+      if ( canChange ) {
+        this.set( index );
+      }
+
+      return this;
     },
 
     updateStatus : function() {
