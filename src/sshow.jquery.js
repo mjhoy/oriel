@@ -81,13 +81,26 @@
     $( sel.prevLink, el ).click( function() { self.prev(); } );
   };
 
+  // Set the caption
+  var setCaption = function ( caption, index ) {
+    $( sel.caption, this.el ).html( caption );
+  };
+
+  var setLocation = function ( index ) {
+    var num = index + 1,
+        total = this.fulls.length;
+    $( sel.location, this.el ).text( num + " of " + total );
+  };
+
   // Default options for the sshow function.
   var defaultOptions = {
     statusSetup : statusSetup,
     handlerSetup : handlerSetup,
     prefetch : 3,
     allowLoop : true,
-    animationTime : 100
+    animationTime : 100,
+    setCaption : setCaption,
+    setLocation : setLocation
   };
 
   Sshow = function() {
@@ -305,7 +318,13 @@
     },
 
     updateStatus : function() {
-
+      var options = this.options,
+          index = this.currentIndex,
+          caption = this.captions[index],
+          el = this.el,
+          total = this.fulls.length;
+      if ( $.isFunction( options.setLocation ) ) options.setLocation.call( this, index );
+      if ( $.isFunction( options.setCaption ) ) options.setCaption.call( this, caption, index );
     },
 
     next : function() {
@@ -350,9 +369,6 @@
       return this;
     },
 
-    updateStatus : function() {
-
-    }
 
   });
 
