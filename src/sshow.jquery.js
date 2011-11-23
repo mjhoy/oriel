@@ -137,6 +137,9 @@
 
       placeholder = $( '<div class="' + domClass.placeholder + '"></div>' ).
         appendTo( stage );
+
+      // Hide the original elements.
+      $( source ).hide();
     },
 
     _setupImages : function() {
