@@ -97,20 +97,7 @@
     $( sel.location, this.el ).text( num + " of " + total );
   };
 
-  // Default options for the sshow function.
-  var defaultOptions = {
-    statusSetup : statusSetup,
-    handlerSetup : handlerSetup,
-    prefetch : 3,
-    allowLoop : true,
-    animationTime : 100,
-    setCaption : setCaption,
-    setLocation : setLocation
-  };
-
   Sshow = function() {
-    // Options are provided to the `init` method.
-    this.options = {};
 
     // The `el` variable contains the jQuery-wrapped DOM element.
     this.el = undefined;
@@ -131,6 +118,19 @@
     // Captions
     this.captions = [];
   };
+
+  // Default options for the sshow function.
+  var defaultOptions = {
+    statusSetup : statusSetup,
+    handlerSetup : handlerSetup,
+    prefetch : 3,
+    allowLoop : true,
+    animationTime : 100,
+    setCaption : setCaption,
+    setLocation : setLocation
+  };
+
+  Sshow.defaultOptions = defaultOptions;
 
   $.extend( Sshow.prototype, {
 
@@ -214,7 +214,7 @@
 
       el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
       this.el = el;
-      options = this.options = $.extend( defaultOptions, ( opts || {} ) );
+      options = this.options = $.extend( Sshow.defaultOptions, ( opts || {} ) );
 
       this._setupDom();
       this._setupImages();
