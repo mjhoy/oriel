@@ -86,7 +86,8 @@
     statusSetup : statusSetup,
     handlerSetup : handlerSetup,
     prefetch : 3,
-    allowLoop : true
+    allowLoop : true,
+    animationTime : 100
   };
 
   Sshow = function() {
@@ -231,7 +232,7 @@
 
         // If it's a new image, fade out the old one.
         if ( !same ) {
-          $( placeholder + ' img.active', el ).fadeOut( 100, function() {
+          $( placeholder + ' img.active', el ).fadeOut( options.animationTime , function() {
             $( this ).css( { opacity: 0.0 } );
           });
           $( placeholder + ' img', el ).removeClass( 'active' );
@@ -244,7 +245,7 @@
         if ( same ) {
           _currentImage.css( { opacity: 1.0 } );
         } else {
-          _currentImage.animate( { opacity: 1.0 }, 100 );
+          _currentImage.animate( { opacity: 1.0 }, options.animationTime );
         }
 
         // Update our status (caption and navigation text)
