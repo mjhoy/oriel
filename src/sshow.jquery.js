@@ -86,6 +86,7 @@
     $( sel.caption, this.el ).html( caption );
   };
 
+  // Set the location (e.g., "2 of 5")
   var setLocation = function ( index ) {
     var num = index + 1,
         total = this.fulls.length;
