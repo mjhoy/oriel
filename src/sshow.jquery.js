@@ -41,6 +41,7 @@
     stage        : 'sshow_stage',
     source       : 'sshow_source',
     status       : 'sshow_status',
+    caption      : 'sshow_caption',
     navigation   : 'sshow_navigation',
     location     : 'sshow_location',
     nextLink     : 'sshow_nextLink',
@@ -64,13 +65,16 @@
         navigation = $( "<div class='" + domClass.navigation + "'>" ),
         next       = $( "<a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
         location   = $( "<span class='" + domClass.location + "'>" ),
-        prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" );
+        prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
+        caption    = $( "<div class='" + domClass.caption + "'>" );
     // status
+    // |- caption
     // `- navigation
     //    |- next
     //    |- location
     //    `- prev
-    status.prepend( navigation.prepend( location ) );
+    status.prepend( caption ).
+      append( navigation.prepend( location ) );
     navigation.prepend( next ).append( prev );
     $( sel.wrapper, el ).prepend( status );
   };
