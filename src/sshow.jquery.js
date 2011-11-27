@@ -81,8 +81,8 @@
 
   var handlerSetup = function ( el ) {
     var self = this;
-    $( sel.nextLink, el ).click( function() { self.next(); } );
-    $( sel.prevLink, el ).click( function() { self.prev(); } );
+    $( sel.nextLink, el ).click( function() { self.next(); return false; } );
+    $( sel.prevLink, el ).click( function() { self.prev(); return false; } );
   };
 
   // Set the caption
