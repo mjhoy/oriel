@@ -70,12 +70,12 @@
     // status
     // |- caption
     // `- navigation
-    //    |- next
+    //    |- prev
     //    |- location
-    //    `- prev
+    //    `- next
     status.prepend( caption ).
       append( navigation.prepend( location ) );
-    navigation.prepend( next ).append( prev );
+    navigation.prepend( prev ).append( next );
     $( sel.wrapper, el ).prepend( status );
   };
 
