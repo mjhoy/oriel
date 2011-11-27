@@ -131,10 +131,11 @@
   };
 
   Sshow.defaultOptions = defaultOptions;
+  Sshow.sel = sel;
 
   $.extend( Sshow.prototype, {
 
-    _setupDom : function () {
+    _setupDom : function() {
 
       var options = this.options,
           el = this.el,
