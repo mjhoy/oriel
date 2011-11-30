@@ -1,0 +1,80 @@
+html,body {
+  font-family: verdana, sans-serif;
+  font-size: 12px;
+}
+h1 {
+  font-family: 'Supermercado One', cursive;
+  text-transform: lowercase;
+}
+.sshow_navigation {
+  font-family: verdana, sans-serif;
+  font-size: 0.8em;
+}
+h2 {
+  font-family: verdana;
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 0.9em;
+  letter-spacing: 1px;
+  color: #333;
+}
+pre {
+  background-color: #f9f9f9;
+  padding: 1em;
+  border: 1px solid #eee;
+}
+section header h1 {
+  font-size: 1.4em;
+  text-align: right;
+  border-bottom: 5px solid #000;
+}
+
+div.code {
+  margin: 2em 0;
+}
+
+#container {
+  width: 600px;
+  margin: 0 auto;
+}
+
+ul {
+  padding: 0;
+  margin: 1em 0;
+  list-style-type: none;
+}
+
+header.main {
+
+}
+header.main h1 {
+  font-size: 56px;
+  margin-bottom: 10px;
+}
+header.main h2 {
+  text-transform: none;
+  font-family: 'Supermercado One', cursive;
+  font-size: 20px;
+  color: #555;
+  letter-spacing: -1px;
+}
+
+a {
+  color: hsl(0, 70%, 50%);
+}
+
+/* demo-1 */
+#demo-1 .sshow_stage {
+  height: 600px; /* Should always set a height. */
+}
+#demo-1 .sshow_navigation {
+  padding: 0.2em;
+  background-color: black;
+  color: #aaa;
+}
+#demo-1 .sshow_navigation a {
+  color: #ccc;
+}
+#demo-1 .sshow_location {
+  padding: 0 0.3em;
+}

@@ -3,8 +3,14 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>mjhoy/sshow.js @ GitHub</title>
+  <title>sshow.js</title>
 
+  <link rel="stylesheet" type="text/css" href="main.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+  <script src="sshow.jquery.js"></script>
+  
+  <link href='http://fonts.googleapis.com/css?family=Supermercado+One' rel='stylesheet' type='text/css'>
 </head>
 
 <body>
@@ -12,28 +18,110 @@
 
   <div id="container">
 
-    <h1><a href="https://github.com/mjhoy/sshow.js">sshow.js</a>
-      <span class="small">by <a href="https://github.com/mjhoy">mjhoy</a></span></h1>
 
-    <div class="description">
-      simple javascript gallery [wip]
-    </div>
+    <header class="main">
+      <h1>sshow.js
+      </h1>
+
+      <h2>
+        simple javascript slideshow jquery extension
+      </h2>
+    </header>
+
+
+    <section>
+      <header>
+        <h1>a simple demo</h1>
+      </header>
+
+      <article class="demo-1">
+        
+         <ul id="demo-1">
+            <li>
+              <img src="images/leaf.jpg">
+            </li>
+            <li>
+              <img src="images/leaves.jpg">
+            </li>
+          </ul>
+        
+        <div class="code">
+          <h2>HTML</h2>
+<pre>
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;img src=&quot;images/leaf.jpg&quot;&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;img src=&quot;images/leaves.jpg&quot;&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</pre>
+        </div>
+        
+        <div class="code">
+          <h2>JavaScript</h2>
+<pre>
+$('ul').sshow();
+</pre>
+        </div>
+        
+        <script type="text/javascript">
+        $(function() {
+          $('#demo-1').sshow();
+        });
+        </script>
+        
+        <div class="code">
+          <h2>CSS</h2>
+<pre>
+.sshow_stage { /* Should always set a height. */
+  height: 600px;
+}
+.sshow_navigation { /* Style the navigation bar. */
+  padding: 0.2em;
+  background-color: black;
+  color: #aaa;
+}
+.sshow_navigation a {
+  color: #ccc;
+}
+</pre>
+        </div>        
+
+       
+      </article>
+    </section>
+
+    <section>
+    <header>
+    <h1><a href="sshow.jquery.html">Annotated source &rarr;</a></h1>
+    </header>
+
+    </section>
     
 
-    <h2>Download</h2>
-    <p>
-      You can download this project in either
-      <a href="https://github.com/mjhoy/sshow.js/zipball/master">zip</a> or
-      <a href="https://github.com/mjhoy/sshow.js/tarball/master">tar formats.
-    </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/mjhoy/sshow.js</pre>
-    </p>
+    <section>
+      <header>
+        <h1>
+          Download
+        </h1>
+      </header>
+      <p>
+        You can download this project in either
+        <a href="https://github.com/mjhoy/sshow.js/zipball/master">zip</a> or
+        <a href="https://github.com/mjhoy/sshow.js/tarball/master">tar formats.
+      </p>
+      <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+        by running:
+        <pre>$ git clone git://github.com/mjhoy/sshow.js</pre>
+      </p>
+    </section>
 
-    <div class="footer">
+    <footer>
+      <i>~ mjhoy 2011</i><br>
       get the source code on GitHub : <a href="https://github.com/mjhoy/sshow.js">mjhoy/sshow.js</a>
-    </div>
+    </footer>
 
   </div>
 
