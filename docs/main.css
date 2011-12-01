@@ -16,6 +16,7 @@ h2 {
   font-weight: normal;
   font-size: 0.9em;
   letter-spacing: 1px;
+  margin-top: 0;
   color: #333;
 }
 pre {
@@ -23,17 +24,30 @@ pre {
   padding: 1em;
   border: 1px solid #eee;
 }
+section header {
+  position: absolute;
+  left: -200px;
+  width: 185px;
+  text-align: right;
+}
 section header h1 {
   font-size: 1.4em;
-  text-align: right;
-  border-bottom: 5px solid #000;
+  margin-top: 0;
+  font-family: georgia;
+  font-weight: normal;
+}
+section header p {
+  font-size: 11px;
+  line-height: 16px;
+  font-family: verdana;
 }
 
 div.code {
-  margin: 2em 0;
+  margin: 0 0 2em 0;
 }
 
 #container {
+  position: relative;
   width: 600px;
   margin: 0 auto;
 }
@@ -57,6 +71,7 @@ header.main h2 {
   font-size: 20px;
   color: #555;
   letter-spacing: -1px;
+  margin-bottom: 3em;
 }
 
 a {
@@ -67,6 +82,7 @@ a {
 #demo-1 .sshow_stage {
   height: 600px; /* Should always set a height. */
 }
+#demo-1-source { min-height: 600px; }
 #demo-1 .sshow_navigation {
   padding: 0.2em;
   background-color: black;
