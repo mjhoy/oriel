@@ -450,6 +450,7 @@
   var hooks = [
     'next',
     'prev',
+    'set',
     'init'
   ];
   makeHooks( hooks, Sshow.prototype );
