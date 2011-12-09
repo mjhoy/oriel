@@ -8,6 +8,36 @@
 
 (function ( $, undefined ) {
 
+  var isString = function ( o ) {
+    return Object.prototype.toString.call( o ) == '[object String]';
+  };
+
+  // Wrap a function `fn` named `name` so that it calls
+  // a method named `trigger` on `object` twice. Once
+  // before the function is called and once after the
+  // function is called (preserving the return value).
+  var makeHook = function ( obj, name ) {
+    var fn = obj[name];
+    return function() {
+      var value,
+          before = 'before' + capitalize( name ),
+          after  = 'after'  + capitalize( name );
+      this.trigger( before );
+      value = fn.apply( this, arguments );
+      this.trigger( after );
+      return value;
+    };
+  };
+
+  var makeHooks = function ( hooks, obj ) {
+    $.each( hooks, function() {
+      var name = this;
+      obj[name] = makeHook( obj, name );
+    } );
+  };
+
+  var _pluginsToBind = [];
+
   // Helper function. Returns the indexes `k` items away from
   // index `n` for an array of length `len`. Useful for
   // getting nearby images in the slideshow to pre-load.
@@ -97,6 +127,12 @@
     $( sel.location, this.el ).text( num + " of " + total );
   };
 
+  // Capitalize the first letter of a string.
+  var capitalize = function ( str ) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+
   Sshow = function() {
 
     // The `el` variable contains the jQuery-wrapped DOM element.
@@ -119,6 +155,22 @@
     this.captions = [];
   };
 
+  // bindAll takes an object with event names as its keys
+  // and functions as its values, to be called when those
+  // events are triggered.
+  Sshow.bindAll = function( obj ) {
+    _pluginsToBind = _pluginsToBind.concat( obj );
+  };
+
+  var _bindPlugins = function ( el ) {
+    $.each( _pluginsToBind, function() {
+      var map = this;
+      $.each( map, function ( key, value ) {
+        $( el ).bind( key, value );
+      } );
+    } );
+  }
+
   // Default options for the sshow function.
   var defaultOptions = {
     statusSetup : statusSetup,
@@ -134,6 +186,21 @@
   Sshow.sel = sel;
 
   $.extend( Sshow.prototype, {
+
+    // Trigger the event on the jQuery element.
+    trigger : function( event ) {
+      var prop = { sshow : this };
+      if ( isString( event ) ) {
+        // create a jQuery event object with some
+        // additional properties.
+        event = $.Event( event, prop );
+        $( this.el ).trigger( event );
+      } else {
+        // `event` is a jQuery event object.
+        event = $.extend( event, prop );
+        $( this.el ).trigger( event );
+      }
+    },
 
     _setupDom : function() {
 
@@ -159,6 +226,7 @@
 
       // Hide the original elements.
       $( source ).hide();
+
     },
 
     _setupImages : function() {
@@ -215,7 +283,10 @@
 
       el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
       this.el = el;
+
       options = this.options = $.extend( Sshow.defaultOptions, ( opts || {} ) );
+      _bindPlugins( el );
+
 
       this._setupDom();
       this._setupImages();
@@ -374,9 +445,14 @@
 
       return this;
     },
-
-
   });
+
+  var hooks = [
+    'next',
+    'prev',
+    'init'
+  ];
+  makeHooks( hooks, Sshow.prototype );
 
   // The main sshow function.
   $.fn.sshow = function ( opts ) {
