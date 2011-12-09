@@ -1,12 +1,12 @@
 /*
  * paginated-thumbs
- * sshowjs plugin
+ * hurdy gurdy plugin
  * http://github.com/mjhoy/sshowjs
  *
  * mjhoy | 2011
  */
 
-(function ( $, S, undefined ) {
+(function ( $, HG, undefined ) {
 
   var animations = window.Modernizr && window.Modernizr.cssanimations;
 
@@ -31,7 +31,7 @@
 
   var Plugin = function() {
 
-    this.sshow = undefined;
+    this.hg = undefined;
     this.pages = [];
     this.currentIndex = 0;
 
@@ -39,26 +39,26 @@
 
   $.extend( Plugin.prototype, {
 
-    init : function ( sshow, options ) {
-      this.sshow = sshow;
+    init : function ( hg, options ) {
+      this.hg = hg;
       this.options = options;
       this.setupDom();
       return this;
     },
 
     makeThumbs : function() {
-      var sshow = this.sshow,
+      var hg = this.hg,
           thumbs = $(),
           self = this;
-      $.each( sshow.thumbs, function ( i, src ) {
-        var full = sshow.fulls[i],
+      $.each( hg.thumbs, function ( i, src ) {
+        var full = hg.fulls[i],
             thumb = $( '<li class="' + domClass.thumbContainer + '">' +
                         '<img class="' + domClass.thumb + '" src="' + src + '"></li>' );
         thumb.data( { full : full } );
         thumbs = thumbs.add( thumb );
         thumb.click( function ( e ) {
           self.setActive( thumb );
-          sshow.set( i );
+          hg.set( i );
         } );
       } );
       return thumbs;
@@ -166,31 +166,31 @@
 
   } );
 
-  S.bindAll( {
+  HG.bindAll( {
 
     beforeSet : function ( e ) {
-      var sshow = e.sshow,
-          options = sshow.options,
+      var hg = e.hg,
+          options = hg.options,
           paginatedThumbs;
-      if ( !sshow.paginatedThumbs ) {
-        paginatedThumbs = new Plugin().init( sshow, options );
-        $( sshow.el ).append( paginatedThumbs.el );
+      if ( !hg.paginatedThumbs ) {
+        paginatedThumbs = new Plugin().init( hg, options );
+        $( hg.el ).append( paginatedThumbs.el );
         paginatedThumbs.calculateWidths();
-        sshow.paginatedThumbs = paginatedThumbs;
+        hg.paginatedThumbs = paginatedThumbs;
       }
     },
 
     afterSet : function( e ) {
-      var sshow = e.sshow,
-          paginatedThumbs = sshow.paginatedThumbs,
+      var hg = e.hg,
+          paginatedThumbs = hg.paginatedThumbs,
           thumbs = paginatedThumbs.thumbs,
-          index = sshow.currentIndex;
+          index = hg.currentIndex;
       paginatedThumbs.setActive( thumbs.eq([ index ]) );
     }
   } );
 
-  $.extend( S.defaultOptions, {
+  $.extend( HG.defaultOptions, {
     thumbsPerPage : 9
   } );
 
-})( jQuery, Sshow );
+})( jQuery, HurdyGurdy );

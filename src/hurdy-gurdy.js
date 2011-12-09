@@ -1,46 +1,35 @@
-/*
- * sshowjs
- * mjhoy | 2011
- * 
- * ermm, beta...
- *
- */
+//  hurdy gurdy 0.1
+//
+//  _mjhoy_ | michael.john.hoy@gmail.com | 2011
+//     
+//  Hurdy Gurdy may be freely distributed under the MIT license.
 
-(function ( $, undefined ) {
 
+(function ( $, root, undefined ) {
+
+  // Helpers
+  // -------
+
+
+  // Return true if `o` is a string; false if not.
+  // Implementation borrowed from _underscore.js_.
   var isString = function ( o ) {
     return Object.prototype.toString.call( o ) == '[object String]';
   };
-
-  // Wrap a function `fn` named `name` so that it calls
-  // a method named `trigger` on `object` twice. Once
-  // before the function is called and once after the
-  // function is called (preserving the return value).
-  var makeHook = function ( obj, name ) {
-    var fn = obj[name];
-    return function() {
-      var value,
-          before = 'before' + capitalize( name ),
-          after  = 'after'  + capitalize( name );
-      this.trigger( before );
-      value = fn.apply( this, arguments );
-      this.trigger( after );
-      return value;
-    };
+  // Capitalize the first letter of a string.
+  var capitalize = function ( str ) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-  var makeHooks = function ( hooks, obj ) {
-    $.each( hooks, function() {
-      var name = this;
-      obj[name] = makeHook( obj, name );
-    } );
-  };
-
-  var _pluginsToBind = [];
-
-  // Helper function. Returns the indexes `k` items away from
+  // Returns the indexes `k` items away from
   // index `n` for an array of length `len`. Useful for
   // getting nearby images in the slideshow to pre-load.
+  //
+  // e.g.,
+  //
+  //     indexNeighbors( 1, 2, 10 ); // => [ 9, 0, 1, 2, 3 ]
+  //     
+  //     indexNeighbors( 5, 1, 10 ); // => [ 4, 5, 6 ]
   var indexNeighbors = function ( n, k, len ) {
     if ( n >= len ) return undefined;
     var arr = [], 
@@ -63,24 +52,74 @@
     }
     return arr;
   }
+  window.indexNeighbors = indexNeighbors;
+
+  // Hooks
+  // ----
+  // Hurdy Gurdy defines several jQuery event hooks to bind to.
+  // The pattern of 'before' and 'after' hooks is borrowed
+  // from Rails.
+ 
+
+  // For the function at `obj[name]`, return a function that
+  // triggers before and after hooks, calling the function in
+  // between them, and preserving its return value. The `name`
+  // is used to construct the event name that is triggered.
+  //
+  // e.g.,
+  //
+  //     makeHook( myObj, 'myFunc' );
+  //
+  // will return a function that first triggers "beforeMyFunc"
+  // (note capitalization), calls myObj.myFunc, triggers
+  // "afterMyFunc" and returns the value from the function call.
+  var makeHook = function ( obj, name ) {
+    var fn = obj[name];
+    return function() {
+      var value,
+          before = 'before' + capitalize( name ),
+          after  = 'after'  + capitalize( name );
+      this.trigger( before );
+      value = fn.apply( this, arguments );
+      this.trigger( after );
+      return value;
+    };
+  };
+
+  // Take an array `hooks` of names and make hooks on `obj`.
+  var makeHooks = function ( hooks, obj ) {
+    $.each( hooks, function() {
+      var name = this;
+      obj[name] = makeHook( obj, name );
+    } );
+  };
+
+  // DOM information
+  // ---------------
+  // Hurdy Gurdy creates many elements, and you may
+  // want to use CSS to style them.
 
   // The classes we will use in constructing new elements.
   var domClass = {
-    sshow        : 'sshow',
-    wrapper      : 'sshow_wrapper',
-    stage        : 'sshow_stage',
-    source       : 'sshow_source',
-    status       : 'sshow_status',
-    caption      : 'sshow_caption',
-    navigation   : 'sshow_navigation',
-    location     : 'sshow_location',
-    nextLink     : 'sshow_nextLink',
-    prevLink     : 'sshow_prevLink',
-    placeholder  : 'sshow_placeholder',
-    imageWrapper : 'sshow_image_wrapper'
+    hg           : 'hg',
+    wrapper      : 'hg-wrapper',
+    stage        : 'hg-stage',
+    source       : 'hg-source',
+    status       : 'hg-status',
+    caption      : 'hg-caption',
+    navigation   : 'hg-navigation',
+    location     : 'hg-location',
+    nextLink     : 'hg-next-link',
+    prevLink     : 'hg-prev-link',
+    placeholder  : 'hg-placeholder',
+    imageWrapper : 'hg-image-wrapper'
   };
 
   // Same as `domClass` but with the dot in front, for CSS selectors.
+  // e.g.,
+  // 
+  //     domClass.hg // # => 'hg'
+  //     sel.hg      // # => '.hg'
   var sel = (function() {
     var obj = {};
     $.each( domClass, function ( k, v ) {
@@ -89,56 +128,93 @@
     return obj;
   })();
 
-  // The default DOM set up of status and next/prev indicators.
-  var statusSetup = function ( el ) {
-    var status     = $( "<div class='" + domClass.status + "'>" ),
-        navigation = $( "<div class='" + domClass.navigation + "'>" ),
-        next       = $( "<a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
-        location   = $( "<span class='" + domClass.location + "'>" ),
-        prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
-        caption    = $( "<div class='" + domClass.caption + "'>" );
-    // status
-    // |- caption
-    // `- navigation
-    //    |- prev
-    //    |- location
-    //    `- next
-    status.prepend( caption ).
-      append( navigation.prepend( location ) );
-    navigation.prepend( prev ).append( next );
-    $( sel.wrapper, el ).prepend( status );
+  // Default options
+  // ---------------
+  // Hurdy Gurdy accepts a hash of options, and it provides
+  // some sensible defaults to begin with.
+  //
+  // In any option function that is called, `this` is the
+  // Hurdy Gurdy object.
+
+  var defaultOptions = {
+
+    // Set up the "status" elements (next/previous links, the "1 of 2" indication, etc).
+    statusSetup : function ( el ) {
+      var status     = $( "<div class='" + domClass.status + "'>" ),
+          navigation = $( "<div class='" + domClass.navigation + "'>" ),
+          next       = $( "<a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
+          location   = $( "<span class='" + domClass.location + "'>" ),
+          prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
+          caption    = $( "<div class='" + domClass.caption + "'>" );
+      // status
+      // |- caption
+      // `- navigation
+      //    |- prev
+      //    |- location
+      //    `- next
+      status.prepend( caption ).
+        append( navigation.prepend( location ) );
+      navigation.prepend( prev ).append( next );
+      $( sel.wrapper, el ).prepend( status );
+    },
+
+    // Set up event handling.
+    handlerSetup : function ( el ) {
+      var self = this;
+      $( sel.nextLink, el ).click( function() { self.next(); return false; } );
+      $( sel.prevLink, el ).click( function() { self.prev(); return false; } );
+    },
+
+    // Load 3 "nearby" images when an image is loaded
+    prefetch : 3,
+
+    // Allow the user to loop back from the end to the
+    // beginning (or vice-versa)
+    allowLoop : true,
+
+    // Animate the images at 100ms
+    animationTime : 100,
+
+    // Set the caption.
+    setCaption : function ( caption, index ) {
+      $( sel.caption, this.el ).html( caption );
+    },
+
+    // Set the location (e.g., "2 of 5")
+    setLocation : function ( index ) {
+      var num = index + 1,
+          total = this.fulls.length;
+      $( sel.location, this.el ).text( num + " of " + total );
+    }
   };
 
-  var handlerSetup = function ( el ) {
-    var self = this;
-    $( sel.nextLink, el ).click( function() { self.next(); return false; } );
-    $( sel.prevLink, el ).click( function() { self.prev(); return false; } );
-  };
+  // The Hurdy Gurdy object
+  // ----------------------
+  // The hurdy gurdy object is _not_ the element that the
+  // hg() jQuery method is called on, but a controller object
+  // that is created in the process and can be referenced
+  // from the original element as the 'hg' data attribute.
+  // This approach is borrowed from the  _Galleria_ slideshow 
+  // library.
+  //
+  // e.g.,
+  //
+  //     $( 'ul.gallery' ).hg().data( 'hg' );
+  //        // => the Hurdy Gurdy object.
+  //
+  //
+  // In this model, the jQuery-wrapped DOM element (e.g., the
+  // original &lt;UL&gt; list of images) is a view, and the
+  // Hurdy Gurdy object is a controller, binding to view
+  // events and handling them appropriately.
 
-  // Set the caption
-  var setCaption = function ( caption, index ) {
-    $( sel.caption, this.el ).html( caption );
-  };
-
-  // Set the location (e.g., "2 of 5")
-  var setLocation = function ( index ) {
-    var num = index + 1,
-        total = this.fulls.length;
-    $( sel.location, this.el ).text( num + " of " + total );
-  };
-
-  // Capitalize the first letter of a string.
-  var capitalize = function ( str ) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
-
-  Sshow = function() {
+  // Generator function.
+  var HurdyGurdy = root.HurdyGurdy = function() {
 
     // The `el` variable contains the jQuery-wrapped DOM element.
     this.el = undefined;
 
-    // Current index displaying.
+    // Current index of the image displaying.
     this.currentIndex = 0;
 
     // Array of URLs to the full-sized (non-thumbnail) images.
@@ -151,45 +227,23 @@
     // full-sized images.
     this.originalElements = [];
 
-    // Captions
+    // An array of captions. Will contain `null` references to
+    // items without captions.
     this.captions = [];
   };
+  
+  // Set the `defaultOptions` and `sel` objects public-facing.
+  HurdyGurdy.defaultOptions = defaultOptions;
+  HurdyGurdy.sel = sel;
 
-  // bindAll takes an object with event names as its keys
-  // and functions as its values, to be called when those
-  // events are triggered.
-  Sshow.bindAll = function( obj ) {
-    _pluginsToBind = _pluginsToBind.concat( obj );
-  };
 
-  var _bindPlugins = function ( el ) {
-    $.each( _pluginsToBind, function() {
-      var map = this;
-      $.each( map, function ( key, value ) {
-        $( el ).bind( key, value );
-      } );
-    } );
-  }
+  $.extend( HurdyGurdy.prototype, {
 
-  // Default options for the sshow function.
-  var defaultOptions = {
-    statusSetup : statusSetup,
-    handlerSetup : handlerSetup,
-    prefetch : 3,
-    allowLoop : true,
-    animationTime : 100,
-    setCaption : setCaption,
-    setLocation : setLocation
-  };
-
-  Sshow.defaultOptions = defaultOptions;
-  Sshow.sel = sel;
-
-  $.extend( Sshow.prototype, {
-
-    // Trigger the event on the jQuery element.
+    // Trigger passes on `event` to the view, augmenting
+    // the jQuery event object with a reference to the
+    // Hurdy Gurdy object.
     trigger : function( event ) {
-      var prop = { sshow : this };
+      var prop = { hg : this };
       if ( isString( event ) ) {
         // create a jQuery event object with some
         // additional properties.
@@ -202,7 +256,9 @@
       }
     },
 
-    _setupDom : function() {
+    // Create and insert the DOM elements we will be using,
+    // and move the original elements out visibility.
+    setupDom : function() {
 
       var options = this.options,
           el = this.el,
@@ -210,14 +266,15 @@
 
       wrapper = $( '<div class="' + domClass.wrapper + '"></div>' );
       stage   = $( '<div class="' + domClass.stage + '"></div>' );
-
       el.wrapInner( '<div class="' + domClass.source + '"></div>' );
+
       source = $( sel.source, el );
       wrapper.prepend( stage );
       el.prepend( wrapper );
 
       // Call "status" setup -- meant for DOM insertion of status elements.
       if ( $.isFunction( options.statusSetup ) ) options.statusSetup.call( this, el );
+
       // Call "handler" setup -- meant to attach handlers to DOM events.
       if ( $.isFunction( options.handlerSetup ) ) options.handlerSetup.call( this, el );
 
@@ -229,26 +286,30 @@
 
     },
 
-    _setupImages : function() {
+    // Query through the view looking for images, parsing out
+    // data, like full-size and thumbnails urls, and captions. 
+    // Probably the hacky-est part of this show right now.
+    analyzeImages : function() {
 
       var el = this.el,
           self = this,
           options = this.options,
           source = $( sel.source, el );
 
-      // Finding our images
-      // The first type of information we look for are links that wrap
-      // images. We assume the link goes to a display (large) version
-      // of the image it wraps, which maints a lot of usability with
-      // no JavaScript running.
+      // The first type of information we look for are links.
+      // Assume that an &lt;img&gt; element wrapped by the link
+      // is a thumbnail, and the link points to large version.
       if ( $( source ).find( 'a' ).length > 0 ) {
         $( source ).find( 'a' ).each( function() {
-          var ln = $( this ), // The anchor element
+          var ln = $( this ),
               src = ln.attr( 'href' ),
+              img = ln.find( 'img' ).eq( 0 ),
+              thumb = img.attr( 'src' ) || src,
               caption;
 
           self.originalElements.push( ln );
           self.fulls.push( src );
+          self.thumbs.push( thumb );
 
           if ( $.isFunction( options.getCaption ) ) { 
             self.captions.push( options.getCaption.call( this, ln ) );
@@ -256,13 +317,14 @@
         });
       } else {
       // Just look for all images, and use the `src` attribute as the
-      // display src.
+      // full-size source, as well as the thumbnail source.
         $( source ).find( 'img' ).each( function() {
           var img = $(this),
               src = img.attr( 'src' ),
               caption;
           self.originalElements.push( img );
           self.fulls.push( src );
+          self.thumbs.push( src );
           if ( $.isFunction( options.getCaption ) ) {
             self.captions.push( options.getCaption.call( this, img ) );
           }
@@ -270,36 +332,40 @@
         });
       }
 
-      // Push any `img` elements' `src` atttributes as thumbs.
-      $( source ).find( 'img' ).each( function() {
-        self.thumbs.push( $( this ).attr( 'src' ) );
-      });
-
     },
 
+    // Bind all plugins to the view.
+    _bindPlugins : function() {
+      var el = this.el;
+      $.each( HurdyGurdy._pluginsToBind, function() {
+        var map = this;
+        $.each( map, function ( key, value ) {
+          $( el ).bind( key, value );
+        } );
+      } );
+    },
+
+    // Set up the DOM, get our data, and set the slideshow at 0.
     init : function ( el, opts ) {
       var self = this,
           options;
 
-      el = $( el ).addClass( domClass.sshow ).css( { position : 'relative'} );
+      el = $( el ).addClass( domClass.hg ).css( { position : 'relative'} );
       this.el = el;
 
-      options = this.options = $.extend( Sshow.defaultOptions, ( opts || {} ) );
-      _bindPlugins( el );
+      options = this.options = $.extend( HurdyGurdy.defaultOptions, ( opts || {} ) );
+      this._bindPlugins();
 
-
-      this._setupDom();
-      this._setupImages();
-
+      this.setupDom();
+      this.analyzeImages();
       self.set( 0 );
 
       return this;
     },
 
-    // Setting an image
+    // Set the image at `index`.
     set : function ( index ) {
       var el = this.el,
-          // Are we showing the current image?
           same = ( this.currentIndex === index ),
           options = this.options,
           prefetch = options.prefetch,
@@ -312,7 +378,6 @@
       this.currentIndex = index;
 
       if ( href ) {
-
         // Load the image.
         this.load( index );
 
@@ -324,6 +389,8 @@
         }
 
         // If it's a new image, fade out the old one.
+        // TODO: take out `css` calls where possible, move to
+        // actuall css.
         if ( !same ) {
           $( placeholder + ' img.active', el ).fadeOut( options.animationTime , function() {
             $( this ).css( { opacity: 0.0 } );
@@ -346,12 +413,12 @@
 
         // Call onImageChange.
         if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
-
       }
       
       return this;
     },
 
+    // Load an image (create the actual DOM element).
     load : function ( index ) {
       var href = this.fulls[index],
           orig = this.originalElements[index],
@@ -394,6 +461,7 @@
       return this;
     },
 
+    // Refresh our status indicators (location and caption).
     updateStatus : function() {
       var options = this.options,
           index = this.currentIndex,
@@ -404,12 +472,12 @@
       if ( $.isFunction( options.setCaption ) ) options.setCaption.call( this, caption, index );
     },
 
+    // Next image.
     next : function() {
       var canChange = true,
           index = this.currentIndex,
           fulls = this.fulls,
           allowLoop = this.options.allowLoop;
-
       if ( index < fulls.length - 1 ) {
         index += 1;
       } else if ( allowLoop ) {
@@ -425,12 +493,12 @@
       return this;
     },
 
+    // Previous image.
     prev : function() {
       var canChange = true,
           index = this.currentIndex,
           fulls = this.fulls,
           allowLoop = this.options.allowLoop;
-
       if ( index > 0 ) {
         index -= 1;
       } else if ( allowLoop ) {
@@ -445,21 +513,36 @@
 
       return this;
     },
+
   });
 
-  var hooks = [
-    'next',
-    'prev',
-    'set',
-    'init'
-  ];
-  makeHooks( hooks, Sshow.prototype );
+  // Plugins
+  // -------
 
-  // The main sshow function.
-  $.fn.sshow = function ( opts ) {
+  HurdyGurdy._pluginsToBind = [];
+
+  // The main interface plugins can use to quickly bind to
+  // all Hurdy Gurdy instances.
+  //
+  // Takes an object with event names as its keys
+  // and functions as its values, to be called when those
+  // events are triggered.
+  HurdyGurdy.bindAll = function( obj ) {
+    HurdyGurdy._pluginsToBind = HurdyGurdy._pluginsToBind.concat( obj );
+  };
+
+  // Define the before/after hooks.
+  var hooks = [ 'next', 'prev', 'set', 'init' ];
+  makeHooks( hooks, HurdyGurdy.prototype );
+
+  // The jQuery Function
+  // -------------------
+  // Not much to see: create a new Hurdy Gurdy instance,
+  // call `init`, and attach a reference to the view.
+  $.fn.hg = function ( opts ) {
     return this.each( function() {
-      $( this ).data( 'sshow', new Sshow().init( this, opts ) );
+      $( this ).data( 'hg', new HurdyGurdy().init( this, opts ) );
     });
   };
 
-})( jQuery );
+})( jQuery, this );
