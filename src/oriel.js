@@ -1,8 +1,8 @@
-//  hurdy gurdy 0.1
+//  Oriel 0.1
 //
 //  _mjhoy_ | michael.john.hoy@gmail.com | 2011
 //     
-//  Hurdy Gurdy may be freely distributed under the MIT license.
+//  Oriel may be freely distributed under the MIT license.
 
 
 (function ( $, root, undefined ) {
@@ -52,11 +52,11 @@
     }
     return arr;
   }
-  window.indexNeighbors = indexNeighbors;
+  root.indexNeighbors = indexNeighbors;
 
   // Hooks
   // ----
-  // Hurdy Gurdy defines several jQuery event hooks to bind to.
+  // Oriel defines several jQuery event hooks to bind to.
   // The pattern of 'before' and 'after' hooks is borrowed
   // from Rails.
  
@@ -96,30 +96,30 @@
 
   // DOM information
   // ---------------
-  // Hurdy Gurdy creates many elements, and you may
+  // Oriel creates many elements, and you may
   // want to use CSS to style them.
 
   // The classes we will use in constructing new elements.
   var domClass = {
-    hg           : 'hg',
-    wrapper      : 'hg-wrapper',
-    stage        : 'hg-stage',
-    source       : 'hg-source',
-    status       : 'hg-status',
-    caption      : 'hg-caption',
-    navigation   : 'hg-navigation',
-    location     : 'hg-location',
-    nextLink     : 'hg-next-link',
-    prevLink     : 'hg-prev-link',
-    placeholder  : 'hg-placeholder',
-    imageWrapper : 'hg-image-wrapper'
+    oriel           : 'oriel',
+    wrapper      : 'oriel-wrapper',
+    stage        : 'oriel-stage',
+    source       : 'oriel-source',
+    status       : 'oriel-status',
+    caption      : 'oriel-caption',
+    navigation   : 'oriel-navigation',
+    location     : 'oriel-location',
+    nextLink     : 'oriel-next-link',
+    prevLink     : 'oriel-prev-link',
+    placeholder  : 'oriel-placeholder',
+    imageWrapper : 'oriel-image-wrapper'
   };
 
   // Same as `domClass` but with the dot in front, for CSS selectors.
   // e.g.,
   // 
-  //     domClass.hg // # => 'hg'
-  //     sel.hg      // # => '.hg'
+  //     domClass.oriel // # => 'oriel'
+  //     sel.oriel      // # => '.oriel'
   var sel = (function() {
     var obj = {};
     $.each( domClass, function ( k, v ) {
@@ -130,11 +130,11 @@
 
   // Default options
   // ---------------
-  // Hurdy Gurdy accepts a hash of options, and it provides
+  // Oriel accepts a hash of options, and it provides
   // some sensible defaults to begin with.
   //
   // In any option function that is called, `this` is the
-  // Hurdy Gurdy object.
+  // Oriel object.
 
   var defaultOptions = {
 
@@ -188,28 +188,28 @@
     }
   };
 
-  // The Hurdy Gurdy object
+  // The Oriel object
   // ----------------------
-  // The hurdy gurdy object is _not_ the element that the
-  // hg() jQuery method is called on, but a controller object
+  // The oriel object is _not_ the element that the
+  // oriel() jQuery method is called on, but a controller object
   // that is created in the process and can be referenced
-  // from the original element as the 'hg' data attribute.
+  // from the original element as the 'oriel' data attribute.
   // This approach is borrowed from the  _Galleria_ slideshow 
   // library.
   //
   // e.g.,
   //
-  //     $( 'ul.gallery' ).hg().data( 'hg' );
-  //        // => the Hurdy Gurdy object.
+  //     $( 'ul.gallery' ).oriel().data( 'oriel' );
+  //        // => the Oriel object.
   //
   //
   // In this model, the jQuery-wrapped DOM element (e.g., the
   // original &lt;UL&gt; list of images) is a view, and the
-  // Hurdy Gurdy object is a controller, binding to view
+  // Oriel object is a controller, binding to view
   // events and handling them appropriately.
 
   // Generator function.
-  var HurdyGurdy = root.HurdyGurdy = function() {
+  var Oriel = root.Oriel = function() {
 
     // The `el` variable contains the jQuery-wrapped DOM element.
     this.el = undefined;
@@ -233,17 +233,17 @@
   };
   
   // Set the `defaultOptions` and `sel` objects public-facing.
-  HurdyGurdy.defaultOptions = defaultOptions;
-  HurdyGurdy.sel = sel;
+  Oriel.defaultOptions = defaultOptions;
+  Oriel.sel = sel;
 
 
-  $.extend( HurdyGurdy.prototype, {
+  $.extend( Oriel.prototype, {
 
     // Trigger passes on `event` to the view, augmenting
     // the jQuery event object with a reference to the
-    // Hurdy Gurdy object.
+    // Oriel object.
     trigger : function( event ) {
-      var prop = { hg : this };
+      var prop = { oriel : this };
       if ( isString( event ) ) {
         // create a jQuery event object with some
         // additional properties.
@@ -337,7 +337,7 @@
     // Bind all plugins to the view.
     _bindPlugins : function() {
       var el = this.el;
-      $.each( HurdyGurdy._pluginsToBind, function() {
+      $.each( Oriel._pluginsToBind, function() {
         var map = this;
         $.each( map, function ( key, value ) {
           $( el ).bind( key, value );
@@ -350,10 +350,10 @@
       var self = this,
           options;
 
-      el = $( el ).addClass( domClass.hg ).css( { position : 'relative'} );
+      el = $( el ).addClass( domClass.oriel ).css( { position : 'relative'} );
       this.el = el;
 
-      options = this.options = $.extend( HurdyGurdy.defaultOptions, ( opts || {} ) );
+      options = this.options = $.extend( Oriel.defaultOptions, ( opts || {} ) );
       this._bindPlugins();
 
       this.setupDom();
@@ -519,29 +519,29 @@
   // Plugins
   // -------
 
-  HurdyGurdy._pluginsToBind = [];
+  Oriel._pluginsToBind = [];
 
   // The main interface plugins can use to quickly bind to
-  // all Hurdy Gurdy instances.
+  // all Oriel instances.
   //
   // Takes an object with event names as its keys
   // and functions as its values, to be called when those
   // events are triggered.
-  HurdyGurdy.bindAll = function( obj ) {
-    HurdyGurdy._pluginsToBind = HurdyGurdy._pluginsToBind.concat( obj );
+  Oriel.bindAll = function( obj ) {
+    Oriel._pluginsToBind = Oriel._pluginsToBind.concat( obj );
   };
 
   // Define the before/after hooks.
   var hooks = [ 'next', 'prev', 'set', 'init' ];
-  makeHooks( hooks, HurdyGurdy.prototype );
+  makeHooks( hooks, Oriel.prototype );
 
   // The jQuery Function
   // -------------------
-  // Not much to see: create a new Hurdy Gurdy instance,
+  // Not much to see: create a new Oriel instance,
   // call `init`, and attach a reference to the view.
-  $.fn.hg = function ( opts ) {
+  $.fn.oriel = function ( opts ) {
     return this.each( function() {
-      $( this ).data( 'hg', new HurdyGurdy().init( this, opts ) );
+      $( this ).data( 'oriel', new Oriel().init( this, opts ) );
     });
   };
 

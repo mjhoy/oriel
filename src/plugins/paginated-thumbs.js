@@ -1,12 +1,12 @@
 /*
  * paginated-thumbs
- * hurdy gurdy plugin
+ * oriel plugin
  * http://github.com/mjhoy/sshowjs
  *
  * mjhoy | 2011
  */
 
-(function ( $, HG, undefined ) {
+(function ( $, Oriel, undefined ) {
 
   var animations = window.Modernizr && window.Modernizr.cssanimations;
 
@@ -31,7 +31,7 @@
 
   var Plugin = function() {
 
-    this.hg = undefined;
+    this.oriel = undefined;
     this.pages = [];
     this.currentIndex = 0;
 
@@ -39,26 +39,26 @@
 
   $.extend( Plugin.prototype, {
 
-    init : function ( hg, options ) {
-      this.hg = hg;
+    init : function ( oriel, options ) {
+      this.oriel = oriel;
       this.options = options;
       this.setupDom();
       return this;
     },
 
     makeThumbs : function() {
-      var hg = this.hg,
+      var oriel = this.oriel,
           thumbs = $(),
           self = this;
-      $.each( hg.thumbs, function ( i, src ) {
-        var full = hg.fulls[i],
+      $.each( oriel.thumbs, function ( i, src ) {
+        var full = oriel.fulls[i],
             thumb = $( '<li class="' + domClass.thumbContainer + '">' +
                         '<img class="' + domClass.thumb + '" src="' + src + '"></li>' );
         thumb.data( { full : full } );
         thumbs = thumbs.add( thumb );
         thumb.click( function ( e ) {
           self.setActive( thumb );
-          hg.set( i );
+          oriel.set( i );
         } );
       } );
       return thumbs;
@@ -166,31 +166,31 @@
 
   } );
 
-  HG.bindAll( {
+  Oriel.bindAll( {
 
     beforeSet : function ( e ) {
-      var hg = e.hg,
-          options = hg.options,
+      var oriel = e.oriel,
+          options = oriel.options,
           paginatedThumbs;
-      if ( !hg.paginatedThumbs ) {
-        paginatedThumbs = new Plugin().init( hg, options );
-        $( hg.el ).append( paginatedThumbs.el );
+      if ( !oriel.paginatedThumbs ) {
+        paginatedThumbs = new Plugin().init( oriel, options );
+        $( oriel.el ).append( paginatedThumbs.el );
         paginatedThumbs.calculateWidths();
-        hg.paginatedThumbs = paginatedThumbs;
+        oriel.paginatedThumbs = paginatedThumbs;
       }
     },
 
     afterSet : function( e ) {
-      var hg = e.hg,
-          paginatedThumbs = hg.paginatedThumbs,
+      var oriel = e.oriel,
+          paginatedThumbs = oriel.paginatedThumbs,
           thumbs = paginatedThumbs.thumbs,
-          index = hg.currentIndex;
+          index = oriel.currentIndex;
       paginatedThumbs.setActive( thumbs.eq([ index ]) );
     }
   } );
 
-  $.extend( HG.defaultOptions, {
+  $.extend( Oriel.defaultOptions, {
     thumbsPerPage : 9
   } );
 
-})( jQuery, HurdyGurdy );
+})( jQuery, Oriel );
