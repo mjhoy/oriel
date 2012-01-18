@@ -52,7 +52,6 @@
     }
     return arr;
   }
-  root.indexNeighbors = indexNeighbors;
 
   // Hooks
   // ----
@@ -289,6 +288,8 @@
     // Query through the view looking for images, parsing out
     // data, like full-size and thumbnails urls, and captions. 
     // Probably the hacky-est part of this show right now.
+    // TODO: make more modular. E.g., a `getCaption` function
+    // in the options object.
     analyzeImages : function() {
 
       var el = this.el,
