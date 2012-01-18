@@ -1,0 +1,198 @@
+<!DOCTYPE html>  <html> <head>   <title>paginated-thumbs.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>            <div id="jump_to">         Jump To &hellip;         <div id="jump_wrapper">           <div id="jump_page">                                           <a class="source" href="oriel.html">                 oriel.js               </a>                                           <a class="source" href="paginated-thumbs.html">                 paginated-thumbs.js               </a>                        </div>         </div>       </div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               paginated-thumbs.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * paginated-thumbs</span>
+<span class="cm"> * oriel plugin</span>
+<span class="cm"> * http://github.com/mjhoy/sshowjs</span>
+<span class="cm"> *</span>
+<span class="cm"> * mjhoy | 2011</span>
+<span class="cm"> */</span>
+
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">Oriel</span><span class="p">,</span> <span class="kc">undefined</span> <span class="p">)</span> <span class="p">{</span>
+
+  <span class="kd">var</span> <span class="nx">animations</span> <span class="o">=</span> <span class="nb">window</span><span class="p">.</span><span class="nx">Modernizr</span> <span class="o">&amp;&amp;</span> <span class="nb">window</span><span class="p">.</span><span class="nx">Modernizr</span><span class="p">.</span><span class="nx">cssanimations</span><span class="p">;</span>
+
+  <span class="kd">var</span> <span class="nx">domClass</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">el</span> <span class="o">:</span> <span class="s1">&#39;paginated-thumbs&#39;</span><span class="p">,</span>
+    <span class="nx">thumb</span> <span class="o">:</span> <span class="s1">&#39;pt-thumb&#39;</span><span class="p">,</span>
+    <span class="nx">thumbContainer</span> <span class="o">:</span> <span class="s1">&#39;pt-thumb-container&#39;</span><span class="p">,</span>
+    <span class="nx">page</span> <span class="o">:</span> <span class="s1">&#39;pt-page&#39;</span><span class="p">,</span>
+    <span class="nx">pagesContainer</span> <span class="o">:</span> <span class="s1">&#39;pt-pages-container&#39;</span><span class="p">,</span>
+    <span class="nx">next</span> <span class="o">:</span> <span class="s1">&#39;pt-next&#39;</span><span class="p">,</span>
+    <span class="nx">prev</span> <span class="o">:</span> <span class="s1">&#39;pt-prev&#39;</span><span class="p">,</span>
+    <span class="nx">navigation</span> <span class="o">:</span> <span class="s1">&#39;pt-navigation&#39;</span>
+  <span class="p">};</span>
+
+  <span class="kd">var</span> <span class="nx">sel</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">obj</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">domClass</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">k</span><span class="p">,</span> <span class="nx">v</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nx">obj</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">v</span><span class="p">;</span>
+    <span class="p">}</span> <span class="p">);</span>
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">Plugin</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">oriel</span> <span class="o">=</span> <span class="kc">undefined</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">pages</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">currentIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="p">};</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">Plugin</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span>
+
+    <span class="nx">init</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">oriel</span><span class="p">,</span> <span class="nx">options</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">oriel</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">setupDom</span><span class="p">();</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">makeThumbs</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">oriel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">oriel</span><span class="p">,</span>
+          <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(),</span>
+          <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+      <span class="nx">$</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">thumbs</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">src</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">full</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">fulls</span><span class="p">[</span><span class="nx">i</span><span class="p">],</span>
+            <span class="nx">thumb</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;li class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">thumbContainer</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="o">+</span>
+                        <span class="s1">&#39;&lt;img class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">thumb</span> <span class="o">+</span> <span class="s1">&#39;&quot; src=&quot;&#39;</span> <span class="o">+</span> <span class="nx">src</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;/li&gt;&#39;</span> <span class="p">);</span>
+        <span class="nx">thumb</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span> <span class="p">{</span> <span class="nx">full</span> <span class="o">:</span> <span class="nx">full</span> <span class="p">}</span> <span class="p">);</span>
+        <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span> <span class="nx">thumb</span> <span class="p">);</span>
+        <span class="nx">thumb</span><span class="p">.</span><span class="nx">click</span><span class="p">(</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+          <span class="nx">self</span><span class="p">.</span><span class="nx">setActive</span><span class="p">(</span> <span class="nx">thumb</span> <span class="p">);</span>
+          <span class="nx">oriel</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">i</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="p">);</span>
+      <span class="p">}</span> <span class="p">);</span>
+      <span class="k">return</span> <span class="nx">thumbs</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">setActive</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">thumb</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">page</span><span class="p">,</span> <span class="nx">index</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">thumbs</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="s1">&#39;active&#39;</span> <span class="p">);</span>
+      <span class="nx">thumb</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="s1">&#39;active&#39;</span> <span class="p">);</span>
+      <span class="nx">page</span> <span class="o">=</span> <span class="nx">thumb</span><span class="p">.</span><span class="nx">parents</span><span class="p">(</span> <span class="nx">sel</span><span class="p">.</span><span class="nx">page</span> <span class="p">);</span>
+      <span class="nx">index</span> <span class="o">=</span> <span class="nx">page</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span> <span class="s1">&#39;index&#39;</span> <span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">index</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">next</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">currentIndex</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">prev</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">currentIndex</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">set</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">index</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">pages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pages</span><span class="p">,</span>
+          <span class="nx">currentIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">currentIndex</span><span class="p">,</span>
+          <span class="nx">width</span><span class="p">,</span> <span class="nx">offset</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">pages</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">throw</span> <span class="s1">&#39;set: no pages!&#39;</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">currentIndex</span> <span class="o">===</span> <span class="nx">index</span> <span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">index</span> <span class="o">&gt;=</span> <span class="nx">pages</span><span class="p">.</span><span class="nx">length</span> <span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">index</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">pages</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">index</span> <span class="p">);</span>
+
+      <span class="nx">width</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">width</span><span class="p">();</span>
+      <span class="nx">offset</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span> <span class="nx">index</span> <span class="o">*</span> <span class="nx">width</span> <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">animations</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span> <span class="p">{</span> <span class="nx">left</span><span class="o">:</span> <span class="nx">offset</span> <span class="p">}</span> <span class="p">);</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">animate</span><span class="p">(</span> <span class="p">{</span> <span class="nx">left</span><span class="o">:</span> <span class="nx">offset</span> <span class="p">}</span> <span class="p">);</span>
+      <span class="p">}</span>
+      
+      <span class="k">this</span><span class="p">.</span><span class="nx">currentIndex</span> <span class="o">=</span> <span class="nx">index</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">setupNavigation</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
+          <span class="nx">el</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">,</span>
+          <span class="nx">navigation</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;nav class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">navigation</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="p">),</span>
+          <span class="nx">prev</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">prev</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&amp;lt;&amp;lt;&lt;/a&gt;&#39;</span> <span class="p">),</span>
+          <span class="nx">spacer</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;span class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">spacer</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&amp;nbsp;&lt;/span&gt;&#39;</span> <span class="p">),</span>
+          <span class="nx">next</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">next</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&amp;gt;&amp;gt;&lt;/a&gt;&#39;</span> <span class="p">);</span>
+
+      <span class="nx">navigation</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="nx">prev</span><span class="p">,</span> <span class="nx">spacer</span><span class="p">,</span> <span class="nx">next</span> <span class="p">);</span>
+
+      <span class="nx">prev</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span> <span class="nx">self</span><span class="p">.</span><span class="nx">prev</span><span class="p">(</span> <span class="nx">e</span> <span class="p">);</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span> <span class="p">);</span>
+      <span class="nx">next</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="s1">&#39;click&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span> <span class="nx">self</span><span class="p">.</span><span class="nx">next</span><span class="p">(</span> <span class="nx">e</span> <span class="p">);</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span> <span class="p">}</span> <span class="p">);</span>
+
+      <span class="nx">el</span><span class="p">.</span><span class="nx">prepend</span><span class="p">(</span> <span class="nx">navigation</span> <span class="p">);</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">navigation</span> <span class="o">=</span> <span class="nx">navigation</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">setupDom</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">el</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;div class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">el</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="p">),</span>
+          <span class="nx">thumbs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">makeThumbs</span><span class="p">(),</span>
+          <span class="nx">options</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span>
+          <span class="nx">container</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;ul class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">pagesContainer</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="p">);</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">el</span> <span class="o">=</span> <span class="nx">el</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">thumbs</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">container</span> <span class="o">=</span> <span class="nx">container</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">paginateThumbs</span><span class="p">(</span> <span class="nx">thumbs</span> <span class="p">);</span>
+
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">options</span><span class="p">.</span><span class="nx">thumbsPerPage</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">setupNavigation</span><span class="p">();</span>
+      <span class="p">}</span>
+
+      <span class="nx">el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span> <span class="nx">container</span> <span class="p">);</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+    <span class="p">},</span>
+
+    <span class="nx">calculateWidths</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">elWidth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">el</span><span class="p">.</span><span class="nx">width</span><span class="p">(),</span>
+          <span class="nx">n</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pages</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">container</span><span class="p">.</span><span class="nx">css</span><span class="p">(</span> <span class="p">{</span> <span class="nx">width</span><span class="o">:</span> <span class="p">(</span> <span class="nx">elWidth</span> <span class="o">*</span> <span class="nx">n</span> <span class="p">)</span> <span class="o">+</span> <span class="mi">15</span> <span class="p">}</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="nx">paginateThumbs</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">thumbs</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">pages</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">pages</span><span class="p">,</span>
+          <span class="nx">container</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">container</span><span class="p">,</span>
+          <span class="nx">perPage</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">options</span><span class="p">.</span><span class="nx">thumbsPerPage</span><span class="p">,</span>
+          <span class="nx">rem</span><span class="p">,</span> <span class="nx">page</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="nx">perPage</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">rem</span> <span class="o">=</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span> <span class="nx">perPage</span> <span class="p">);</span>
+        <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">perPage</span> <span class="p">);</span>
+      <span class="p">}</span>
+      <span class="nx">page</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span> <span class="s1">&#39;&lt;div class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">domClass</span><span class="p">.</span><span class="nx">page</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="p">).</span>
+        <span class="nx">data</span><span class="p">(</span> <span class="p">{</span> <span class="nx">index</span> <span class="o">:</span> <span class="nx">pages</span><span class="p">.</span><span class="nx">length</span> <span class="p">}</span> <span class="p">).</span><span class="nx">appendTo</span><span class="p">(</span> <span class="nx">container</span> <span class="p">).</span><span class="nx">append</span><span class="p">(</span> <span class="nx">thumbs</span> <span class="p">);</span>
+      <span class="nx">pages</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span> <span class="nx">page</span> <span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">rem</span> <span class="o">&amp;&amp;</span> <span class="nx">rem</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">paginateThumbs</span><span class="p">(</span> <span class="nx">rem</span> <span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+
+  <span class="p">}</span> <span class="p">);</span>
+
+  <span class="nx">Oriel</span><span class="p">.</span><span class="nx">bindAll</span><span class="p">(</span> <span class="p">{</span>
+
+    <span class="nx">beforeSet</span> <span class="o">:</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">oriel</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">oriel</span><span class="p">,</span>
+          <span class="nx">options</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span>
+          <span class="nx">paginatedThumbs</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Plugin</span><span class="p">().</span><span class="nx">init</span><span class="p">(</span> <span class="nx">oriel</span><span class="p">,</span> <span class="nx">options</span> <span class="p">);</span>
+        <span class="nx">$</span><span class="p">(</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">el</span> <span class="p">).</span><span class="nx">append</span><span class="p">(</span> <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">el</span> <span class="p">);</span>
+        <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">calculateWidths</span><span class="p">();</span>
+        <span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="nx">paginatedThumbs</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">},</span>
+
+    <span class="nx">afterSet</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">oriel</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">oriel</span><span class="p">,</span>
+          <span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span><span class="p">,</span>
+          <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">thumbs</span><span class="p">,</span>
+          <span class="nx">index</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">currentIndex</span><span class="p">;</span>
+      <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">setActive</span><span class="p">(</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">eq</span><span class="p">([</span> <span class="nx">index</span> <span class="p">])</span> <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span> <span class="p">);</span>
+
+  <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">Oriel</span><span class="p">.</span><span class="nx">defaultOptions</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">thumbsPerPage</span> <span class="o">:</span> <span class="mi">9</span>
+  <span class="p">}</span> <span class="p">);</span>
+
+<span class="p">})(</span> <span class="nx">jQuery</span><span class="p">,</span> <span class="nx">Oriel</span> <span class="p">);</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

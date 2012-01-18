@@ -3,10 +3,10 @@ html,body {
   font-size: 12px;
 }
 h1 {
-  font-family: 'Supermercado One', cursive;
+  font-family: 'Geostar Fill', sans-serif;
   text-transform: lowercase;
 }
-.sshow_navigation {
+.oriel-navigation {
   font-family: verdana, sans-serif;
   font-size: 0.8em;
 }
@@ -25,10 +25,6 @@ pre {
   border: 1px solid #eee;
 }
 section header {
-  position: absolute;
-  left: -200px;
-  width: 185px;
-  text-align: right;
 }
 section header h1 {
   font-size: 1.4em;
@@ -59,7 +55,6 @@ ul {
 }
 
 header.main {
-
 }
 header.main h1 {
   font-size: 56px;
@@ -67,11 +62,9 @@ header.main h1 {
 }
 header.main h2 {
   text-transform: none;
-  font-family: 'Supermercado One', cursive;
-  font-size: 20px;
-  color: #555;
-  letter-spacing: -1px;
-  margin-bottom: 3em;
+  font-family: verdana;
+  font-size: 19px;
+  color: #aaa;
 }
 
 a {
@@ -79,18 +72,18 @@ a {
 }
 
 /* demo-1 */
-#demo-1 .sshow_stage {
+#demo-1 .oriel-stage {
   height: 600px; /* Should always set a height. */
 }
 #demo-1-source { min-height: 600px; }
-#demo-1 .sshow_navigation {
+#demo-1 .oriel-navigation {
   padding: 0.2em;
   background-color: black;
   color: #aaa;
 }
-#demo-1 .sshow_navigation a {
+#demo-1 .oriel-navigation a {
   color: #ccc;
 }
-#demo-1 .sshow_location {
+#demo-1 .oriel-location {
   padding: 0 0.3em;
 }
