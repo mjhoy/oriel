@@ -351,7 +351,7 @@
       var self = this,
           options;
 
-      el = $( el ).addClass( domClass.oriel ).css( { position : 'relative'} );
+      el = $( el ).addClass( domClass.oriel );
       this.el = el;
 
       options = this.options = $.extend( Oriel.defaultOptions, ( opts || {} ) );
