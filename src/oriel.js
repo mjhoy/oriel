@@ -111,7 +111,8 @@
     nextLink     : 'oriel-next-link',
     prevLink     : 'oriel-prev-link',
     placeholder  : 'oriel-placeholder',
-    imageWrapper : 'oriel-image-wrapper'
+    imageWrapper : 'oriel-image-wrapper',
+    active       : 'oriel-active'
   };
 
   // Same as `domClass` but with the dot in front, for CSS selectors.
@@ -351,7 +352,7 @@
       var self = this,
           options;
 
-      el = $( el ).addClass( domClass.oriel ).css( { position : 'relative'} );
+      el = $( el ).addClass( domClass.oriel );
       this.el = el;
 
       options = this.options = $.extend( Oriel.defaultOptions, ( opts || {} ) );
@@ -389,31 +390,20 @@
           }
         }
 
-        // If it's a new image, fade out the old one.
-        // TODO: take out `css` calls where possible, move to
-        // actuall css.
         if ( !same ) {
-          $( placeholder + ' img.active', el ).fadeOut( options.animationTime , function() {
-            $( this ).css( { opacity: 0.0 } );
-          });
-          $( placeholder + ' img', el ).removeClass( 'active' );
+          $( placeholder + ' img' + sel.active, el ).removeClass( domClass.active );
+          $( placeholder + ' img', el ).removeClass( domClass.active );
+
+          // Get the new image.
+          _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
+
+          // Update our status (caption and navigation text)
+          this.updateStatus();
+
+          // Call onImageChange.
+          if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
         } 
 
-        // Get the new image.
-        _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).
-          addClass( 'active' ).css( { display: 'inline' } );
-
-        if ( same ) {
-          _currentImage.css( { opacity: 1.0 } );
-        } else {
-          _currentImage.animate( { opacity: 1.0 }, options.animationTime );
-        }
-
-        // Update our status (caption and navigation text)
-        this.updateStatus();
-
-        // Call onImageChange.
-        if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
       }
       
       return this;
@@ -434,11 +424,7 @@
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
-          appendTo( $( placeholder ) ).css( {
-            position : 'absolute',
-            display  : 'none',
-            opacity  : 0
-          } ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
+          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
 
         // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {

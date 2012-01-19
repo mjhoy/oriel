@@ -71,6 +71,19 @@ a {
   color: hsl(0, 70%, 50%);
 }
 
+/* general */
+.oriel-placeholder img.oriel-active {
+  opacity: 1.0;
+}
+.oriel-placeholder img {
+  opacity: 0.0;
+  position: absolute;
+  -webkit-transition: opacity 0.2s ease-in-out;
+  -moz-transition: opacity 0.2s ease-in-out;
+  -o-transition: opacity 0.2s ease-in-out;
+  transition: opacity 0.2s ease-in-out;
+}
+
 /* demo-1 */
 #demo-1 .oriel-stage {
   height: 600px; /* Should always set a height. */
