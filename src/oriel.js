@@ -1,6 +1,6 @@
 // Oriel 0.1
 //
-// Michael Hoy | michael.john.hoy@gmail.com | 2011
+// Michael Hoy | michael.john.hoy@gmail.com | 2012
 //     
 // Oriel may be freely distributed under the MIT license.
 

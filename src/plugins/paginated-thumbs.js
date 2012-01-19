@@ -3,7 +3,7 @@
  * oriel plugin
  * http://github.com/mjhoy/sshowjs
  *
- * mjhoy | 2011
+ * Michael Hoy | michael.john.hoy@gmail.com | 2012
  */
 
 (function ( $, Oriel, undefined ) {
