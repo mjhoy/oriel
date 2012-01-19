@@ -1,8 +1,8 @@
-//  Oriel 0.1
+// Oriel 0.1
 //
-//  _mjhoy_ | michael.john.hoy@gmail.com | 2011
+// Michael Hoy | michael.john.hoy@gmail.com | 2011
 //     
-//  Oriel may be freely distributed under the MIT license.
+// Oriel may be freely distributed under the MIT license.
 
 
 (function ( $, root, undefined ) {
@@ -52,7 +52,6 @@
     }
     return arr;
   }
-  root.indexNeighbors = indexNeighbors;
 
   // Hooks
   // ----
@@ -112,7 +111,8 @@
     nextLink     : 'oriel-next-link',
     prevLink     : 'oriel-prev-link',
     placeholder  : 'oriel-placeholder',
-    imageWrapper : 'oriel-image-wrapper'
+    imageWrapper : 'oriel-image-wrapper',
+    active       : 'oriel-active'
   };
 
   // Same as `domClass` but with the dot in front, for CSS selectors.
@@ -289,6 +289,8 @@
     // Query through the view looking for images, parsing out
     // data, like full-size and thumbnails urls, and captions. 
     // Probably the hacky-est part of this show right now.
+    // TODO: make more modular. E.g., a `getCaption` function
+    // in the options object.
     analyzeImages : function() {
 
       var el = this.el,
@@ -350,7 +352,7 @@
       var self = this,
           options;
 
-      el = $( el ).addClass( domClass.oriel ).css( { position : 'relative'} );
+      el = $( el ).addClass( domClass.oriel );
       this.el = el;
 
       options = this.options = $.extend( Oriel.defaultOptions, ( opts || {} ) );
@@ -388,25 +390,14 @@
           }
         }
 
-        // If it's a new image, fade out the old one.
-        // TODO: take out `css` calls where possible, move to
-        // actuall css.
+        // If it's a new image, change classes.
         if ( !same ) {
-          $( placeholder + ' img.active', el ).fadeOut( options.animationTime , function() {
-            $( this ).css( { opacity: 0.0 } );
-          });
-          $( placeholder + ' img', el ).removeClass( 'active' );
+          $( placeholder + ' img' + sel.active, el ).removeClass( domClass.active );
+          $( placeholder + ' img', el ).removeClass( domClass.active );
         } 
 
         // Get the new image.
-        _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).
-          addClass( 'active' ).css( { display: 'inline' } );
-
-        if ( same ) {
-          _currentImage.css( { opacity: 1.0 } );
-        } else {
-          _currentImage.animate( { opacity: 1.0 }, options.animationTime );
-        }
+        _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
 
         // Update our status (caption and navigation text)
         this.updateStatus();
@@ -433,11 +424,7 @@
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
-          appendTo( $( placeholder ) ).css( {
-            position : 'absolute',
-            display  : 'none',
-            opacity  : 0
-          } ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
+          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
 
         // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {

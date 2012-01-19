@@ -98,6 +98,32 @@ $('ul').oriel();
           </div>        
         </div>
 
+        <p>
+          Oriel doesn’t make any CSS changes with JavaScript
+          by default. It swaps classes in and out instead.
+          To make the images above fade in and out, the
+          following CSS was used:
+        </p>
+
+        <div class="code">
+<pre>
+.oriel-placeholder img { /* hidden by default */
+  opacity: 0.0;
+  position: absolute;
+  transition: opacity 0.2s ease-in-out;
+}
+.oriel-placeholder img.oriel-active {
+  opacity: 1.0;
+}
+</pre>
+
+        </div>
+
+        <p>
+          With CSS3, you would only need to adjust the CSS to (for instance)
+          have images slide in and out instead of fadeing.
+        </p>
+
        
       </article>
     </section>
