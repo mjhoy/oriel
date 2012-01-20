@@ -349,8 +349,7 @@
 
     // Set up the DOM, get our data, and set the slideshow at 0.
     init : function ( el, opts ) {
-      var self = this,
-          options;
+      var options;
 
       el = $( el ).addClass( domClass.oriel );
       this.el = el;
@@ -360,7 +359,7 @@
 
       this.setupDom();
       this.analyzeImages();
-      self.set( 0 );
+      this.set( 0 );
 
       return this;
     },
@@ -397,12 +396,13 @@
           // Get the new image.
           _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
 
-          // Update our status (caption and navigation text)
-          this.updateStatus();
 
           // Call onImageChange.
           if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
         } 
+
+        // Update our status (caption and navigation text)
+        this.updateStatus();
 
       }
       
