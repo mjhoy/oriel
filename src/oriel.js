@@ -520,8 +520,10 @@
   };
 
   // Define the before/after hooks.
-  var hooks = [ 'next', 'prev', 'set', 'init' ];
-  makeHooks( hooks, Oriel.prototype );
+  makeHooks( 
+    [ 'next', 'prev', 'set', 'init' ], 
+    Oriel.prototype 
+  );
 
   // The jQuery Function
   // -------------------
