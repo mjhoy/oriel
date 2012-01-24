@@ -216,7 +216,7 @@
     this.el = undefined;
 
     // Current index of the image displaying.
-    this.currentIndex = 0;
+    this.currentIndex = undefined;
 
     // Array of URLs to the full-sized (non-thumbnail) images.
     this.fulls  = [];
