@@ -236,6 +236,7 @@
   // Set the `defaultOptions` and `sel` objects public-facing.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
+  Oriel.domClass = domClass;
 
 
   $.extend( Oriel.prototype, {
