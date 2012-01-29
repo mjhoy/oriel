@@ -11,7 +11,6 @@
   // Helpers
   // -------
 
-
   // Return true if `o` is a string; false if not.
   // Implementation borrowed from _underscore.js_.
   var isString = function ( o ) {
@@ -21,6 +20,10 @@
   var capitalize = function ( str ) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
+  // Use jQuery's `inArray` rather than Array.prototype.indexOf
+  // for compatibility.
+  var inArray = $.inArray;
 
   // Returns the indexes `k` items away from
   // index `n` for an array of length `len`. Useful for
@@ -44,7 +47,7 @@
       } else {
         r = offset;
       }
-      if ( ( r >= 0 ) && ( r < len ) && ( arr.indexOf( r ) < 0 ) ) {
+      if ( ( r >= 0 ) && ( r < len ) && ( inArray( r, arr ) === -1 ) ) {
         arr.push( r );
       }
       if ( arr.length === len ) {
