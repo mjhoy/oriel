@@ -172,7 +172,7 @@
       var oriel = e.oriel,
           options = oriel.options,
           paginatedThumbs;
-      if ( !oriel.paginatedThumbs ) {
+      if ( options.paginatedThumbs && !oriel.paginatedThumbs ) {
         paginatedThumbs = new Plugin().init( oriel, options );
         $( oriel.el ).append( paginatedThumbs.el );
         paginatedThumbs.calculateWidths();
@@ -182,14 +182,17 @@
 
     afterSet : function( e ) {
       var oriel = e.oriel,
-          paginatedThumbs = oriel.paginatedThumbs,
-          thumbs = paginatedThumbs.thumbs,
-          index = oriel.currentIndex;
-      paginatedThumbs.setActive( thumbs.eq([ index ]) );
+          paginatedThumbs = oriel.paginatedThumbs;
+      if ( paginatedThumbs ) {
+        var thumbs = paginatedThumbs.thumbs,
+            index = oriel.currentIndex;
+        paginatedThumbs.setActive( thumbs.eq([ index ]) );
+      }
     }
   } );
 
   $.extend( Oriel.defaultOptions, {
+    paginatedThumbs : false,
     thumbsPerPage : 9
   } );
 
