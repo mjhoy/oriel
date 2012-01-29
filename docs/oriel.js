@@ -1,6 +1,7 @@
 // Oriel 0.1
 //
-// Michael Hoy | michael.john.hoy@gmail.com | 2011
+// Michael Hoy | michael.john.hoy@gmail.com | 2012
+// https://github.com/mjhoy/oriel
 //     
 // Oriel may be freely distributed under the MIT license.
 
@@ -9,7 +10,6 @@
 
   // Helpers
   // -------
-
 
   // Return true if `o` is a string; false if not.
   // Implementation borrowed from _underscore.js_.
@@ -20,6 +20,10 @@
   var capitalize = function ( str ) {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
+  // Use jQuery's `inArray` rather than Array.prototype.indexOf
+  // for compatibility.
+  var inArray = $.inArray;
 
   // Returns the indexes `k` items away from
   // index `n` for an array of length `len`. Useful for
@@ -43,7 +47,7 @@
       } else {
         r = offset;
       }
-      if ( ( r >= 0 ) && ( r < len ) && ( arr.indexOf( r ) < 0 ) ) {
+      if ( ( r >= 0 ) && ( r < len ) && ( inArray( r, arr ) === -1 ) ) {
         arr.push( r );
       }
       if ( arr.length === len ) {
@@ -215,7 +219,7 @@
     this.el = undefined;
 
     // Current index of the image displaying.
-    this.currentIndex = 0;
+    this.currentIndex = undefined;
 
     // Array of URLs to the full-sized (non-thumbnail) images.
     this.fulls  = [];
@@ -235,6 +239,7 @@
   // Set the `defaultOptions` and `sel` objects public-facing.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
+  Oriel.domClass = domClass;
 
 
   $.extend( Oriel.prototype, {
@@ -349,8 +354,7 @@
 
     // Set up the DOM, get our data, and set the slideshow at 0.
     init : function ( el, opts ) {
-      var self = this,
-          options;
+      var options;
 
       el = $( el ).addClass( domClass.oriel );
       this.el = el;
@@ -360,7 +364,7 @@
 
       this.setupDom();
       this.analyzeImages();
-      self.set( 0 );
+      this.set( 0 );
 
       return this;
     },
@@ -390,20 +394,21 @@
           }
         }
 
-        // If it's a new image, change classes.
         if ( !same ) {
           $( placeholder + ' img' + sel.active, el ).removeClass( domClass.active );
           $( placeholder + ' img', el ).removeClass( domClass.active );
-        } 
 
-        // Get the new image.
-        _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
+          // Get the new image.
+          _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
+
+
+          // Call onImageChange.
+          if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
+        } 
 
         // Update our status (caption and navigation text)
         this.updateStatus();
 
-        // Call onImageChange.
-        if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
       }
       
       return this;
@@ -519,8 +524,10 @@
   };
 
   // Define the before/after hooks.
-  var hooks = [ 'next', 'prev', 'set', 'init' ];
-  makeHooks( hooks, Oriel.prototype );
+  makeHooks( 
+    [ 'next', 'prev', 'set', 'init' ], 
+    Oriel.prototype 
+  );
 
   // The jQuery Function
   // -------------------
