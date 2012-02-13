@@ -172,7 +172,7 @@
       <span class="kd">var</span> <span class="nx">oriel</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">oriel</span><span class="p">,</span>
           <span class="nx">options</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">options</span><span class="p">,</span>
           <span class="nx">paginatedThumbs</span><span class="p">;</span>
-      <span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">options</span><span class="p">.</span><span class="nx">paginatedThumbs</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span> <span class="p">)</span> <span class="p">{</span>
         <span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Plugin</span><span class="p">().</span><span class="nx">init</span><span class="p">(</span> <span class="nx">oriel</span><span class="p">,</span> <span class="nx">options</span> <span class="p">);</span>
         <span class="nx">$</span><span class="p">(</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">el</span> <span class="p">).</span><span class="nx">append</span><span class="p">(</span> <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">el</span> <span class="p">);</span>
         <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">calculateWidths</span><span class="p">();</span>
@@ -182,14 +182,17 @@
 
     <span class="nx">afterSet</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">e</span> <span class="p">)</span> <span class="p">{</span>
       <span class="kd">var</span> <span class="nx">oriel</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">oriel</span><span class="p">,</span>
-          <span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span><span class="p">,</span>
-          <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">thumbs</span><span class="p">,</span>
-          <span class="nx">index</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">currentIndex</span><span class="p">;</span>
-      <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">setActive</span><span class="p">(</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">eq</span><span class="p">([</span> <span class="nx">index</span> <span class="p">])</span> <span class="p">);</span>
+          <span class="nx">paginatedThumbs</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">paginatedThumbs</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span> <span class="nx">paginatedThumbs</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">thumbs</span> <span class="o">=</span> <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">thumbs</span><span class="p">,</span>
+            <span class="nx">index</span> <span class="o">=</span> <span class="nx">oriel</span><span class="p">.</span><span class="nx">currentIndex</span><span class="p">;</span>
+        <span class="nx">paginatedThumbs</span><span class="p">.</span><span class="nx">setActive</span><span class="p">(</span> <span class="nx">thumbs</span><span class="p">.</span><span class="nx">eq</span><span class="p">([</span> <span class="nx">index</span> <span class="p">])</span> <span class="p">);</span>
+      <span class="p">}</span>
     <span class="p">}</span>
   <span class="p">}</span> <span class="p">);</span>
 
   <span class="nx">$</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">Oriel</span><span class="p">.</span><span class="nx">defaultOptions</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">paginatedThumbs</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nx">thumbsPerPage</span> <span class="o">:</span> <span class="mi">9</span>
   <span class="p">}</span> <span class="p">);</span>
 
