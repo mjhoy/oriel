@@ -141,8 +141,24 @@
   // Oriel object.
 
   var defaultOptions = {
+    // **itemSelector**
+    //
+    // The selector to find items within the parent element.
+    // "li" by default.
+    itemSelector : 'li',
 
-    // Set up the "status" elements (next/previous links, the "1 of 2" indication, etc).
+    // **statusSetup**
+    //
+    //     [el]: The oriel element.
+    //
+    // The default implementation creates a DOM structure like so:
+    //
+    //      status
+    //      |- caption
+    //      `- navigation
+    //        |- prev
+    //        |- location
+    //        `- next
     statusSetup : function ( el ) {
       var status     = $( "<div class='" + domClass.status + "'>" ),
           navigation = $( "<div class='" + domClass.navigation + "'>" ),
@@ -150,46 +166,107 @@
           location   = $( "<span class='" + domClass.location + "'>" ),
           prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
           caption    = $( "<div class='" + domClass.caption + "'>" );
-      // status
-      // |- caption
-      // `- navigation
-      //    |- prev
-      //    |- location
-      //    `- next
       status.prepend( caption ).
         append( navigation.prepend( location ) );
       navigation.prepend( prev ).append( next );
       $( sel.wrapper, el ).prepend( status );
     },
 
-    // Set up event handling.
+    // **handlerSetup**
+    //
+    //     [el]: The oriel element.
+    //
+    // The default implementation sets up next and previous handling.
     handlerSetup : function ( el ) {
       var self = this;
       $( sel.nextLink, el ).click( function() { self.next(); return false; } );
       $( sel.prevLink, el ).click( function() { self.prev(); return false; } );
     },
 
-    // Load 3 "nearby" images when an image is loaded
+    // **prefetch**
+    //
+    // The number of images to "preload" by entering the into
+    // the DOM before they actually needed. Only makes a difference
+    // if the "full" images are not loaded in the DOM to begin with.
     prefetch : 3,
 
-    // Allow the user to loop back from the end to the
-    // beginning (or vice-versa)
+    // **allowLoop**
+    //
+    // When set to `true`, the gallery loops to the beginning
+    // from the end (and vice-versa). Defaults true.
     allowLoop : true,
 
-    // Animate the images at 100ms
+    // **animationTime** _(TODO: implement or remove, unused)_
     animationTime : 100,
 
-    // Set the caption.
+    // **setCaption**
+    //
+    //     [caption]: the current caption
+    //     [index]: the current index
+    //
+    // The default implementation sets the html of the
+    // `caption` selector.
     setCaption : function ( caption, index ) {
       $( sel.caption, this.el ).html( caption );
     },
 
-    // Set the location (e.g., "2 of 5")
+    // **setLocation**
+    //
+    //     [index]: the current index
+    //
+    // The default implementation sets the text in the
+    // `location` selector to, e.g., "1 of 2".
     setLocation : function ( index ) {
       var num = index + 1,
           total = this.fulls.length;
       $( sel.location, this.el ).text( num + " of " + total );
+    },
+
+    // **getCaption**
+    //
+    //     [el]: jQuery-wrapped element
+    //     returns: an HTML string representing the image caption.
+    //
+    //  The default implementation looks for `data-caption` on
+    //  `el`, then a child image with class `caption`, then
+    //  any child <p> element.
+    getCaption : function ( el ) {
+      if ( el.data( 'caption ') ) return el.data( 'caption' );
+      if ( el.find( '.caption' ).length > 0 ) return el.find( '.caption' ).html();
+      if ( el.find( 'p' ).length > 0 ) return el.find( 'p' ).html();
+
+      return undefined;
+    },
+
+    // **getFull**
+    //
+    //     [el]: jQuery-wrapped element
+    //     returns: a URL string identifing the "full" image.
+    //
+    // The default implementation checks for a `src` attr
+    // on `el`, then for a `href` attr, then for a `src`
+    // on a child element.
+    getFull : function ( el ) {
+      if ( el.attr( 'src' ) ) return el.attr( 'src' );
+      if ( el.attr( 'href' ) ) return el.attr( 'href' );
+      if ( el.find( 'img' ).length > 0 ) return el.find( 'img' ).attr( 'src' );
+
+      return undefined;
+    },
+
+    // **getThumb**
+    //
+    //     [el]: jQuery-wrapped element
+    //     returns: a URL string identified the "thumbnail" image.
+    //   
+    // The default implementation checks if `el` contains an
+    // `img` element, and returns the `src` attribute of that.
+    getThumb : function ( el ) {
+      if ( el.find( 'img' ).length > 0 ) return el.find( 'img' ).attr( 'src' );
+
+      return undefined;
     }
+
   };
 
   // The Oriel object
@@ -298,47 +375,40 @@
     // in the options object.
     analyzeImages : function() {
 
-      var el = this.el,
-          self = this,
-          options = this.options,
-          source = $( sel.source, el );
+      var el           = this.el,
+          self         = this,
+          options      = this.options,
+          itemSelector = options.itemSelector,
+          getFull      = options.getFull,
+          getThumb     = options.getThumb,
+          getCaption   = options.getCaption,
+          source       = $( sel.source, el ),
+          elements     = $( itemSelector, source ),
 
-      // The first type of information we look for are links.
-      // Assume that an &lt;img&gt; element wrapped by the link
-      // is a thumbnail, and the link points to large version.
-      if ( $( source ).find( 'a' ).length > 0 ) {
-        $( source ).find( 'a' ).each( function() {
-          var ln = $( this ),
-              src = ln.attr( 'href' ),
-              img = ln.find( 'img' ).eq( 0 ),
-              thumb = img.attr( 'src' ) || src,
-              caption;
+          // Our data structures to be populated.
+          originalElements = [],
+          fulls    = [],
+          thumbs   = [],
+          captions = [];
 
-          self.originalElements.push( ln );
-          self.fulls.push( src );
-          self.thumbs.push( thumb );
+      // Iterate through the elements (queried with `itemSelector`)
+      // and collect data.
+      elements.each( function() {
+        var e = $( this ), cap, full, thumb;
+        if ( $.isFunction( getCaption ) ) cap = getCaption.call( self, e );
+        if ( $.isFunction( getFull ) )   full = getFull.call( self, e );
+        if ( $.isFunction( getThumb ) ) thumb = getThumb.call( self, e );
 
-          if ( $.isFunction( options.getCaption ) ) { 
-            self.captions.push( options.getCaption.call( this, ln ) );
-          }
-        });
-      } else {
-      // Just look for all images, and use the `src` attribute as the
-      // full-size source, as well as the thumbnail source.
-        $( source ).find( 'img' ).each( function() {
-          var img = $(this),
-              src = img.attr( 'src' ),
-              caption;
-          self.originalElements.push( img );
-          self.fulls.push( src );
-          self.thumbs.push( src );
-          if ( $.isFunction( options.getCaption ) ) {
-            self.captions.push( options.getCaption.call( this, img ) );
-          }
+        fulls.push( full || undefined );
+        thumbs.push( thumb || undefined );
+        captions.push( cap || undefined );
+        originalElements.push( e );
+      });
 
-        });
-      }
-
+      this.originalElements = originalElements;
+      this.fulls = fulls;
+      this.thumbs = thumbs;
+      this.captions = captions;
     },
 
     // Bind all plugins to the view.
