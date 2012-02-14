@@ -1,4 +1,4 @@
-// Oriel 0.1
+// Oriel 0.2
 //
 // Michael Hoy | michael.john.hoy@gmail.com | 2012
 // https://github.com/mjhoy/oriel
