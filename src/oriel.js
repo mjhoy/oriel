@@ -5,8 +5,6 @@
 //     
 // Oriel may be freely distributed under the MIT license.
 
-
-/*jslint eqeq: true, white: true, maxerr: 50, indent: 4 */
 (function ( $, root ) {
 
   "use strict";
