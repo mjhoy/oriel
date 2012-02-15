@@ -9,6 +9,8 @@
 
   "use strict";
 
+  var version = 0.2;
+
   // Helpers
   // -------
 
@@ -314,10 +316,11 @@
     this.captions = [];
   };
   
-  // Set the `defaultOptions` and `sel` objects public-facing.
+  // Public-facing objects.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
   Oriel.domClass = domClass;
+  Oriel.version = version;
 
 
   $.extend( Oriel.prototype, {
