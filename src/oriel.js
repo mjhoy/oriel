@@ -6,7 +6,10 @@
 // Oriel may be freely distributed under the MIT license.
 
 
-(function ( $, root, undefined ) {
+/*jslint eqeq: true, white: true, maxerr: 50, indent: 4 */
+(function ( $, root ) {
+
+  "use strict";
 
   // Helpers
   // -------
@@ -55,7 +58,7 @@
       }
     }
     return arr;
-  }
+  };
 
   // Hooks
   // ----
@@ -130,7 +133,7 @@
       obj[k] = '.' + v;
     } );
     return obj;
-  })();
+  }());
 
   // Default options
   // ---------------
@@ -609,4 +612,4 @@
     });
   };
 
-})( jQuery, this );
+}( jQuery, this ));
