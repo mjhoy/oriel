@@ -3,7 +3,10 @@
 <p>Michael Hoy | michael.john.hoy@gmail.com | 2012
 https://github.com/mjhoy/oriel</p>
 
-<p>Oriel may be freely distributed under the MIT license.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span> <span class="p">(</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">root</span><span class="p">,</span> <span class="kc">undefined</span> <span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Helpers</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Return true if <code>o</code> is a string; false if not.
+<p>Oriel may be freely distributed under the MIT license.</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="cm">/*jslint eqeq: true, white: true, maxerr: 50, indent: 4 */</span>
+<span class="p">(</span><span class="kd">function</span> <span class="p">(</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">root</span> <span class="p">)</span> <span class="p">{</span>
+
+  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Helpers</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Return true if <code>o</code> is a string; false if not.
 Implementation borrowed from <em>underscore.js</em>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">isString</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">o</span> <span class="p">)</span> <span class="p">{</span>
     <span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span> <span class="nx">o</span> <span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;[object String]&#39;</span><span class="p">;</span>
   <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Capitalize the first letter of a string.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">capitalize</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span> <span class="nx">str</span> <span class="p">)</span> <span class="p">{</span>
@@ -39,7 +42,7 @@ indexNeighbors( 5, 1, 10 ); // =&gt; [ 4, 5, 6 ]
       <span class="p">}</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nx">arr</span><span class="p">;</span>
-  <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Hooks</h2>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <h2>Hooks</h2>
 
 <p>Oriel defines several jQuery event hooks to bind to.
 The pattern of 'before' and 'after' hooks is borrowed
@@ -99,7 +102,7 @@ sel.oriel      // # =&gt; '.oriel'
       <span class="nx">obj</span><span class="p">[</span><span class="nx">k</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">v</span><span class="p">;</span>
     <span class="p">}</span> <span class="p">);</span>
     <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
-  <span class="p">})();</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h2>Default options</h2>
+  <span class="p">}());</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <h2>Default options</h2>
 
 <p>Oriel accepts a hash of options, and it provides
 some sensible defaults to begin with.</p>
@@ -412,7 +415,7 @@ Put in the "placeholder" tray and hide it.</p>             </td>             <td
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
-    <span class="p">},</span>
+    <span class="p">}</span>
 
   <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-61">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-61">&#182;</a>               </div>               <h2>Plugins</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Oriel</span><span class="p">.</span><span class="nx">_pluginsToBind</span> <span class="o">=</span> <span class="p">[];</span></pre></div>             </td>           </tr>                               <tr id="section-62">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-62">&#182;</a>               </div>               <p>The main interface plugins can use to quickly bind to
 all Oriel instances.</p>
@@ -433,6 +436,6 @@ call <code>init</code>, and attach a reference to the view.</p>             </td
     <span class="p">});</span>
   <span class="p">};</span>
 
-<span class="p">})(</span> <span class="nx">jQuery</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+<span class="p">}(</span> <span class="nx">jQuery</span><span class="p">,</span> <span class="k">this</span> <span class="p">));</span>
 
 </pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
