@@ -499,11 +499,11 @@
           self = this,
           el   = this.el,
           options = this.options,
-          placeholder = sel.placeholder,
+          placeholder = $( sel.placeholder, el ),
           _newImage, _i, _l, _attr;
 
       // Check whether this image exists already.
-      if ( $( placeholder + ' img[src="' + href + '"]', el ).length === 0 ) {
+      if ( $( 'img[src="' + href + '"]', placeholder ).length === 0 ) {
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
