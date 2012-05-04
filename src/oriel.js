@@ -472,7 +472,7 @@
           $( placeholder + ' img' + sel.active, el ).removeClass( domClass.active );
           $( placeholder + ' img', el ).removeClass( domClass.active );
 
-          $( placeholder + ' ' + sel.imageWrapper ).removeClass( domClass.active );
+          $( placeholder + ' ' + sel.imageWrapper, el ).removeClass( domClass.active );
 
           // Get the new image.
           _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
