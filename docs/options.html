@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='utf-8'>
+
+  <title>oriel.js</title>
+
+  <link rel="stylesheet" type="text/css" href="main.css" />
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+  <script>
+    if (!window.jQuery) {
+      document.write( '<script src="../lib/jquery.js" ></scr' + 'ipt>' )
+    }
+  </script>
+  <script src="oriel.js"></script>
+  
+  <script src="paginated-thumbs.js"></script>
+  <script src="doc.js"></script>
+</head>
+
+<body>
+  <a href="https://github.com/mjhoy/oriel"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+
+  <div id="container">
+
+
+    <header class="main">
+    <h1><a href="index.html">oriel.js</a>
+      </h1>
+
+      <h2>
+        simple javascript slideshow jquery extension
+      </h2>
+    </header>
+
+    <section>
+      <header>
+        <h1>options.</h1>
+        <p>
+          Pass in <code>onImageChange</code> function to write "output".
+          <a class="toggle-source" href="#demo-2-source" data-slideshow="#demo-2">See the source &rarr;</a>
+        </p>
+        <p style="font-family: monospace; border: 1px solid #ccc; padding: 2px;">
+          OUTPUT:
+          <span id="output"></span>
+        </p>
+      </header>
+
+      <article class="demo-2">
+        
+         <ul id="demo-2">
+            <li>
+              <img src="images/leaf.jpg">
+            </li>
+            <li>
+              <img src="images/leaves.jpg">
+            </li>
+          </ul>
+        
+        <div id="demo-2-source">
+
+          <div class="code">
+            <h2>JavaScript</h2>
+<pre>
+$('ul').oriel({
+  onImageChange : function ( image ) {
+    var output = $( '#output' );
+    var href = $( image ).attr('src');
+    output.html( "Image number " + this.currentIndex + " and href " + href );
+  }
+});
+</pre>
+          </div>
+          
+          <script type="text/javascript">
+          $(function() {
+              window.oriel1 = $('#demo-2').oriel({
+                onImageChange : function ( image ) {
+                  var output = $( '#output' );
+                  var href = $( image ).attr('src');
+                  output.html( "Image number " + this.currentIndex + " and href " + href );
+                }
+              }).data('oriel');
+          });
+          </script>
+          
+          <div class="code">
+            <h2>CSS</h2>
+<pre>
+.oriel_stage { /* Should always set a height. */
+  height: 600px;
+}
+
+/* Navigation bar */
+.oriel_navigation { 
+  padding: 0.2em;
+  background-color: black;
+  color: #aaa;
+}
+.oriel_navigation a {
+  color: #ccc;
+}
+
+/* The oriel "stage" */
+.oriel-stage img {
+  position: absolute;
+  opacity: 0.0;
+  transition: opacity 0.2s ease-in-out;
+}
+.oriel-stage img.oriel-active {
+  opacity: 1.0;
+}
+</pre>
+          </div>        
+        </div>
+
+      </article>
+    </section>
+
+    <footer>
+      <i>~ mjhoy 2012</i><br>
+      get the source code on GitHub : <a href="https://github.com/mjhoy/oriel">mjhoy/oriel</a>
+    </footer>
+
+  </div>
+
+</body>
+</html>

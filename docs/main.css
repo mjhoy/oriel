@@ -72,10 +72,10 @@ a {
 }
 
 /* general */
-.oriel-placeholder img.oriel-active {
+.oriel-stage img.oriel-active {
   opacity: 1.0;
 }
-.oriel-placeholder img {
+.oriel-stage img {
   opacity: 0.0;
   position: absolute;
   -webkit-transition: opacity 0.2s ease-in-out;
