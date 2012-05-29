@@ -507,7 +507,7 @@
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
-          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
+          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '" data-index="' + index + '"></div>' );
 
         // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {
