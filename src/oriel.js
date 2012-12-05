@@ -199,9 +199,6 @@
     // from the end (and vice-versa). Defaults true.
     allowLoop : true,
 
-    // **animationTime** _(TODO: implement or remove, unused)_
-    animationTime : 100,
-
     // **setCaption**
     //
     //     [caption]: the current caption
