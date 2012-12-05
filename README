@@ -12,6 +12,8 @@ Generating Documentation
 
 I use `docco` to generate a nice HTML document from the source.
 
+See: http://mjhoy.github.com/oriel/oriel.html
+
 To (re)generate, run:
 
 $ docco src/*.js src/plugins/*.js
