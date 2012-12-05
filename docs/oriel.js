@@ -1,12 +1,15 @@
-// Oriel 0.1
+// Oriel 0.2
 //
 // Michael Hoy | michael.john.hoy@gmail.com | 2012
 // https://github.com/mjhoy/oriel
 //     
 // Oriel may be freely distributed under the MIT license.
 
+(function ( $, root ) {
 
-(function ( $, root, undefined ) {
+  "use strict";
+
+  var version = 0.2;
 
   // Helpers
   // -------
@@ -55,7 +58,7 @@
       }
     }
     return arr;
-  }
+  };
 
   // Hooks
   // ----
@@ -130,7 +133,7 @@
       obj[k] = '.' + v;
     } );
     return obj;
-  })();
+  }());
 
   // Default options
   // ---------------
@@ -162,13 +165,12 @@
     statusSetup : function ( el ) {
       var status     = $( "<div class='" + domClass.status + "'>" ),
           navigation = $( "<div class='" + domClass.navigation + "'>" ),
-          next       = $( "<a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
-          location   = $( "<span class='" + domClass.location + "'>" ),
-          prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
+          statusContent = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
+                             "<span class='" + domClass.location + "'></span>" +
+                             " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
           caption    = $( "<div class='" + domClass.caption + "'>" );
       status.prepend( caption ).
-        append( navigation.prepend( location ) );
-      navigation.prepend( prev ).append( next );
+        append( navigation.prepend( statusContent ) );
       $( sel.wrapper, el ).prepend( status );
     },
 
@@ -195,9 +197,6 @@
     // When set to `true`, the gallery loops to the beginning
     // from the end (and vice-versa). Defaults true.
     allowLoop : true,
-
-    // **animationTime** _(TODO: implement or remove, unused)_
-    animationTime : 100,
 
     // **setCaption**
     //
@@ -313,10 +312,11 @@
     this.captions = [];
   };
   
-  // Set the `defaultOptions` and `sel` objects public-facing.
+  // Public-facing objects.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
   Oriel.domClass = domClass;
+  Oriel.version = version;
 
 
   $.extend( Oriel.prototype, {
@@ -468,8 +468,12 @@
           $( placeholder + ' img' + sel.active, el ).removeClass( domClass.active );
           $( placeholder + ' img', el ).removeClass( domClass.active );
 
+          $( placeholder + ' ' + sel.imageWrapper, el ).removeClass( domClass.active );
+
           // Get the new image.
           _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
+
+          _currentImage.parents( sel.imageWrapper ).addClass( domClass.active );
 
 
           // Call onImageChange.
@@ -491,15 +495,15 @@
           self = this,
           el   = this.el,
           options = this.options,
-          placeholder = sel.placeholder,
+          placeholder = $( sel.placeholder, el ),
           _newImage, _i, _l, _attr;
 
       // Check whether this image exists already.
-      if ( $( placeholder + ' img[src="' + href + '"]', el ).length === 0 ) {
+      if ( $( 'img[src="' + href + '"]', placeholder ).length === 0 ) {
         // Create an image element for the full-sized image source.
         // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
-          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '"></div>' );
+          appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '" data-index="' + index + '"></div>' );
 
         // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {
@@ -574,7 +578,7 @@
       }
 
       return this;
-    },
+    }
 
   });
 
@@ -609,4 +613,4 @@
     });
   };
 
-})( jQuery, this );
+}( jQuery, this ));
