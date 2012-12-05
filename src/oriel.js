@@ -165,13 +165,12 @@
     statusSetup : function ( el ) {
       var status     = $( "<div class='" + domClass.status + "'>" ),
           navigation = $( "<div class='" + domClass.navigation + "'>" ),
-          next       = $( "<a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
-          location   = $( "<span class='" + domClass.location + "'>" ),
-          prev       = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a>" ),
+          statusContent = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
+                             "<span class='" + domClass.location + "'></span>" +
+                             " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
           caption    = $( "<div class='" + domClass.caption + "'>" );
       status.prepend( caption ).
-        append( navigation.prepend( location ) );
-      navigation.prepend( prev ).append( next );
+        append( navigation.prepend( statusContent ) );
       $( sel.wrapper, el ).prepend( status );
     },
 
