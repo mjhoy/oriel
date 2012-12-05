@@ -34,126 +34,17 @@
       </h2>
     </header>
 
-
-    <section>
-      <header>
-        <h1>A simple demo.</h1>
-        <p>
-          Default options are used with only minimal styling in CSS.
-          <a class="toggle-source" href="#demo-1-source" data-slideshow="#demo-1">See the source &rarr;</a>
-        </p>
-      </header>
-
-      <article class="demo-1">
-        
-         <ul id="demo-1">
-            <li>
-              <img src="images/leaf.jpg">
-            </li>
-            <li>
-              <img src="images/leaves.jpg">
-            </li>
-          </ul>
-        
-        <div id="demo-1-source">
-
-          <div class="code">
-            <h2>HTML</h2>
-<pre>
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;img src=&quot;images/leaf.jpg&quot;&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;img src=&quot;images/leaves.jpg&quot;&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-</pre>
-          </div>
-          
-          <div class="code">
-            <h2>JavaScript</h2>
-<pre>
-$('ul').oriel();
-</pre>
-          </div>
-          
-          <script type="text/javascript">
-          $(function() {
-              window.oriel1 = $('#demo-1').oriel().data('oriel');
-          });
-          </script>
-          
-          <div class="code">
-            <h2>CSS</h2>
-<pre>
-.oriel_stage { /* Should always set a height. */
-  height: 600px;
-}
-.oriel_navigation { /* Style the navigation bar. */
-  padding: 0.2em;
-  background-color: black;
-  color: #aaa;
-}
-.oriel_navigation a {
-  color: #ccc;
-}
-</pre>
-          </div>        
-        </div>
-
-        <p>
-          Oriel doesn’t make any CSS changes with JavaScript
-          by default. It swaps classes in and out instead.
-          To make the images above fade in and out, the
-          following CSS was used:
-        </p>
-
-        <div class="code">
-<pre>
-.oriel-placeholder img { /* hidden by default */
-  opacity: 0.0;
-  position: absolute;
-  transition: opacity 0.2s ease-in-out;
-}
-.oriel-placeholder img.oriel-active {
-  opacity: 1.0;
-}
-</pre>
-
-        </div>
-
-        <p>
-          With CSS3, you would only need to adjust the CSS to (for instance)
-          have images slide in and out instead of fadeing.
-        </p>
-
-       
-      </article>
-    </section>
-
     <section>
       <header>
         <h1>
-          Customizing.
+          Demos
         </h1>
       </header>
 
-      <article>
-        <p>
-          The <code><b>oriel</b></code> object can control the slideshow programmatically.
-        </p>
-        <p>
-          For example:
-        </p>
-<pre>
-var el = $('ul').oriel(); // Create the slideshow
-var slideshow = el.data('oriel'); // Obtain the slideshow object
-
-slideshow.next(); // Go to next slide
-slideshow.set(5); // Go to the 6th slide (0-indexed)
-</pre>
-      </article>
+      <ul>
+        <li><a href="simple-demo.html">Simple demo</a></li>
+        <li><a href="options.html">Options</a></li>
+      </ul>
     </section>
 
     <section>
