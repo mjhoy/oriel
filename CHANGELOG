@@ -1,0 +1,6 @@
+0.3 (Dec 6 2012)
+---
+
+- Remove unused `animationTime` default option (f0d46e5)
+- Space added between Prev / Location / Next elements (8ce8dc3)
+- Bug: remove serial comma (88d550b)
