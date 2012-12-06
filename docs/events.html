@@ -3,7 +3,7 @@
 <head>
   <meta charset='utf-8'>
 
-  <title>oriel.js</title>
+  <title>oriel.js | Events</title>
 
   <link rel="stylesheet" type="text/css" href="main.css" />
 
@@ -49,10 +49,10 @@
 
     <section>
       <header>
-        <h1>Using options</h1>
+        <h1>Using events</h1>
         <p>
-          Pass in <code>onImageChange</code> function to write "output".
-          <a class="toggle-source" href="#demo-2-source" data-slideshow="#demo-2">See the source &rarr;</a>
+          Bind a function to the <code>afterSet</code> event to write "output".
+          <a class="toggle-source" href="#demo-3-source" data-slideshow="#demo-3">See the source &rarr;</a>
         </p>
         <p style="font-family: monospace; border: 1px solid #ccc; padding: 2px;">
           OUTPUT:
@@ -60,9 +60,9 @@
         </p>
       </header>
 
-      <article class="demo-2">
+      <article class="demo-3">
         
-         <ul id="demo-2">
+         <ul id="demo-3">
             <li>
               <img src="images/leaf.jpg">
             </li>
@@ -71,30 +71,28 @@
             </li>
           </ul>
         
-        <div id="demo-2-source">
+        <div id="demo-3-source">
 
           <div class="code">
             <h2>JavaScript</h2>
 <pre>
-$('ul').oriel({
-  onImageChange : function ( image ) {
-    var output = $( '#output' );
-    var href = $( image ).attr('src');
-    output.html( "Image number " + this.currentIndex + " and href " + href );
-  }
+var $oriel = $('ul').oriel({});
+$oriel.bind('afterSet', function(e) {
+  var oriel = e.oriel;
+  var currentImage = oriel.currentIndex;
+  $('#output').text(currentImage);
 });
 </pre>
           </div>
           
           <script type="text/javascript">
           $(function() {
-              window.oriel1 = $('#demo-2').oriel({
-                onImageChange : function ( image ) {
-                  var output = $( '#output' );
-                  var href = $( image ).attr('src');
-                  output.html( "Image number " + this.currentIndex + " and href " + href );
-                }
-              }).data('oriel');
+              var $oriel = $('#demo-3').oriel({});
+              $oriel.bind('afterSet', function(e) {
+                var oriel = e.oriel;
+                var currentImage = oriel.currentIndex;
+                $('#output').text(currentImage);
+              });
           });
           </script>
           
@@ -105,8 +103,20 @@ $('ul').oriel({
 
     <section>
     <p>
-      Read more about options in the <a href="oriel.html">annotated source</a>
-      (search for "Default options").
+      Events triggered:
+    </p>
+    <p>
+      <code>beforeSet</code><br>
+       <code>afterSet</code><br>
+      <code>beforeInit</code><br>
+       <code>afterInit</code><br>
+      <code>beforePrev</code><br>
+       <code>afterPrev</code><br>
+      <code>beforeNext</code><br>
+       <code>afterNext</code><br>
+    </p>
+    <p>
+      Read more about events in the <a href="oriel.html">annotated source</a>.
     </p>
     </section>
 
