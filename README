@@ -18,13 +18,5 @@ To (re)generate, run:
 
 $ docco src/*.js src/plugins/*.js
 
-In addition, there is HTML documentation/examples in the `doc` directory.
-Currently changes to `src` must be copied over to `doc`. (Todo: a better system
-that works with GH pages.)
-
-To copy, run:
-
-$ cp src/*.js src/plugins/*.js docs
-
 -----------------------------------------------
 Michael Hoy | michael.john.hoy@gmail.com | 2012
