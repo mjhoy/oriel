@@ -89,8 +89,9 @@ header.main h2 {
 }
 
 a {
-  color: hsl(0, 70%, 50%);
+  color: #797979;
 }
+a:hover { color: black; }
 
 /* general */
 .oriel-stage img.oriel-active {
