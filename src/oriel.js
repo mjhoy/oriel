@@ -2,7 +2,7 @@
 //
 // Michael Hoy | michael.john.hoy@gmail.com | 2012
 // https://github.com/mjhoy/oriel
-//     
+//
 // Oriel may be freely distributed under the MIT license.
 
 (function ( $, root ) {
@@ -35,11 +35,11 @@
   // e.g.,
   //
   //     indexNeighbors( 1, 2, 10 ); // => [ 9, 0, 1, 2, 3 ]
-  //     
+  //
   //     indexNeighbors( 5, 1, 10 ); // => [ 4, 5, 6 ]
   var indexNeighbors = function ( n, k, len ) {
     if ( n >= len ) return undefined;
-    var arr = [], 
+    var arr = [],
         i, x, r, offset;
     for ( i = 0, x = k * 2; i <= x; i += 1 ) {
       offset = ( i - k ) + n;
@@ -65,7 +65,6 @@
   // Oriel defines several jQuery event hooks to bind to.
   // The pattern of 'before' and 'after' hooks is borrowed
   // from Rails.
- 
 
   // For the function at `obj[name]`, return a function that
   // triggers before and after hooks, calling the function in
@@ -124,7 +123,7 @@
 
   // Same as `domClass` but with the dot in front, for CSS selectors.
   // e.g.,
-  // 
+  //
   //     domClass.oriel // # => 'oriel'
   //     sel.oriel      // # => '.oriel'
   var sel = (function() {
@@ -257,7 +256,7 @@
     //
     //     [el]: jQuery-wrapped element
     //     returns: a URL string identified the "thumbnail" image.
-    //   
+    //
     // The default implementation checks if `el` contains an
     // `img` element, and returns the `src` attribute of that.
     getThumb : function ( el ) {
@@ -274,7 +273,7 @@
   // oriel() jQuery method is called on, but a controller object
   // that is created in the process and can be referenced
   // from the original element as the 'oriel' data attribute.
-  // This approach is borrowed from the  _Galleria_ slideshow 
+  // This approach is borrowed from the  _Galleria_ slideshow
   // library.
   //
   // e.g.,
@@ -311,13 +310,12 @@
     // items without captions.
     this.captions = [];
   };
-  
+
   // Public-facing objects.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
   Oriel.domClass = domClass;
   Oriel.version = version;
-
 
   $.extend( Oriel.prototype, {
 
@@ -369,7 +367,7 @@
     },
 
     // Query through the view looking for images, parsing out
-    // data, like full-size and thumbnails urls, and captions. 
+    // data, like full-size and thumbnails urls, and captions.
     // Probably the hacky-est part of this show right now.
     // TODO: make more modular. E.g., a `getCaption` function
     // in the options object.
@@ -459,8 +457,8 @@
 
         // Load neighboring images, too (prefetch for better interaction.)
         if ( neighbors ) {
-          for ( _i = 0, _l = neighbors.length; _i < _l; _i+=1 ) { 
-            this.load( neighbors[_i] ); 
+          for ( _i = 0, _l = neighbors.length; _i < _l; _i+=1 ) {
+            this.load( neighbors[_i] );
           }
         }
 
@@ -478,13 +476,13 @@
 
           // Call onImageChange.
           if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
-        } 
+        }
 
         // Update our status (caption and navigation text)
         this.updateStatus();
 
       }
-      
+
       return this;
     },
 
@@ -598,9 +596,9 @@
   };
 
   // Define the before/after hooks.
-  makeHooks( 
-    [ 'next', 'prev', 'set', 'init' ], 
-    Oriel.prototype 
+  makeHooks(
+    [ 'next', 'prev', 'set', 'init' ],
+    Oriel.prototype
   );
 
   // The jQuery Function
