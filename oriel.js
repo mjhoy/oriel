@@ -311,7 +311,6 @@
     this.captions = [];
   };
 
-  // Public-facing objects.
   Oriel.defaultOptions = defaultOptions;
   Oriel.sel = sel;
   Oriel.domClass = domClass;
@@ -325,12 +324,9 @@
     trigger : function( event ) {
       var prop = { oriel : this };
       if ( isString( event ) ) {
-        // create a jQuery event object with some
-        // additional properties.
         event = $.Event( event, prop );
         $( this.el ).trigger( event );
       } else {
-        // `event` is a jQuery event object.
         event = $.extend( event, prop );
         $( this.el ).trigger( event );
       }
@@ -352,18 +348,14 @@
       wrapper.prepend( stage );
       el.prepend( wrapper );
 
-      // Call "status" setup -- meant for DOM insertion of status elements.
       if ( $.isFunction( options.statusSetup ) ) options.statusSetup.call( this, el );
 
-      // Call "handler" setup -- meant to attach handlers to DOM events.
       if ( $.isFunction( options.handlerSetup ) ) options.handlerSetup.call( this, el );
 
       placeholder = $( '<div class="' + domClass.placeholder + '"></div>' ).
         appendTo( stage );
 
-      // Hide the original elements.
       $( source ).hide();
-
     },
 
     // Query through the view looking for images, parsing out
@@ -383,14 +375,11 @@
           source       = $( sel.source, el ),
           elements     = $( itemSelector, source ),
 
-          // Our data structures to be populated.
           originalElements = [],
           fulls    = [],
           thumbs   = [],
           captions = [];
 
-      // Iterate through the elements (queried with `itemSelector`)
-      // and collect data.
       elements.each( function() {
         var e = $( this ), cap, full, thumb;
         if ( $.isFunction( getCaption ) ) cap = getCaption.call( self, e );
@@ -448,14 +437,11 @@
           placeholder = sel.placeholder,
           _currentImage, _i, _l;
 
-      // Update currentIndex.
       this.currentIndex = index;
 
       if ( href ) {
-        // Load the image.
         this.load( index );
 
-        // Load neighboring images, too (prefetch for better interaction.)
         if ( neighbors ) {
           for ( _i = 0, _l = neighbors.length; _i < _l; _i+=1 ) {
             this.load( neighbors[_i] );
@@ -468,19 +454,14 @@
 
           $( placeholder + ' ' + sel.imageWrapper, el ).removeClass( domClass.active );
 
-          // Get the new image.
           _currentImage = $( placeholder + ' img[src="' + href + '"]', el ).addClass( domClass.active );
 
           _currentImage.parents( sel.imageWrapper ).addClass( domClass.active );
 
-
-          // Call onImageChange.
           if ( $.isFunction( options.onImageChange ) ) options.onImageChange.call( this, _currentImage );
         }
 
-        // Update our status (caption and navigation text)
         this.updateStatus();
-
       }
 
       return this;
@@ -496,14 +477,10 @@
           placeholder = $( sel.placeholder, el ),
           _newImage, _i, _l, _attr;
 
-      // Check whether this image exists already.
       if ( $( 'img[src="' + href + '"]', placeholder ).length === 0 ) {
-        // Create an image element for the full-sized image source.
-        // Put in the "placeholder" tray and hide it.
         _newImage = $( '<img src="' + href + '"/>' ).
           appendTo( $( placeholder ) ).wrap( '<div class="' + domClass.imageWrapper + '" data-index="' + index + '"></div>' );
 
-        // Copy any "data-" attributes from the original link to the image.
         if ( orig ) {
           for ( _i = 0, _l = orig[0].attributes.length; _i < _l; _i+=1 ) {
             _attr = orig[0].attributes[_i];
@@ -513,7 +490,6 @@
           }
         }
 
-        // Call onImageLoad and onImageClick handler setup.
         if ( $.isFunction( options.onImageLoad ) ) options.onImageLoad.call( this, _newImage, index );
         if ( $.isFunction( options.onImageClick ) ) {
           $( _newImage ).click( function ( e ) {
