@@ -1,22 +1,116 @@
-oriel
------
+  |--------|
+  | |---------|
+  | | |----------|
+  | | |          |
+  |-| |  <3<3<3  |
+    |-|          |
+      |----------|
 
-a very simple and customizable javascript slideshow player.
-
-better documentation forthcoming, but see:
-http://mjhoy.github.com/oriel/
+  oriel: the lazy slideshow
 
 
-Generating Documentation
-------------------------
+what is this?
+-------------
 
-I use `docco` to generate a nice HTML document from the source.
+  Oriel is yet another javascript slideshow library.
+  It essentially works by shuffling CSS classes around.
 
-See: http://mjhoy.github.com/oriel/oriel.html
+  By default it limits the number of elements that are
+  loaded in the DOM by the "nearest neighbors" of whatever
+  slide the user is on. Hence it's laziness. Ideally this
+  avoids loading a bajillion large image files on
+  page load.
 
-To (re)generate, run:
+  Oriel is somewhat minimalist and won't do everything
+  "out of the box". It does require a little bit of
+  familiarity with its API. That's why I've kept it as
+  simple as possible, and it should be possible to read
+  all the code and understand it in an hour or two.
 
-$ docco src/*.js src/plugins/*.js
+
+examples
+--------
+
+  Let's say you have the following HTML:
+
+    <ol id="photos">
+      <li>
+        <a href="photo-1.jpg"><img src="photo-1-thumb.jpg"></a>
+      </li>
+      <li>
+        <a href="photo-2.jpg"><img src="photo-2-thumb.jpg"></a>
+      </li>
+    </ol>
+
+  You might make a slideshow out of it like so:
+
+    var slideshow = Oriel.create({
+      selector: "#photos",
+      getFull:  function(el) { return $('a', el).attr('href'); },
+      getThumb: function(el) { return $('img', el).attr('src'); }
+    });
+
+  Add some basic CSS and you're done:
+
+    .oriel { ... }
+
+
+what's this `Oriel.create({..})` business?
+------------------------------------------
+
+  Oriel.create is a convienence function for instantiating
+  an object of a subclass created by  Oriel.extend(..).
+  Oriel.extend is a tiny helper function (inspired by John Resig's
+  "simple Javascript inheritance" post) that will return a
+  "subclass" of Oriel. The properties of the object that you pass
+  in overrides the base implementation.
+
+  There is no implementation of "super", as I don't see a
+  good reason for it now.
+
+    // this...
+    var mySlideshow = Oriel.create({..})
+
+    // is equivalent to...
+    var mySlideshow = new (Oriel.extend({..}));
+
+    // which is equivalent to...
+    var MySlideshowClass = Oriel.extend({..});
+    var mySlideshow = new MySlideshowClass;
+
+  If the default implementation of every function is what
+  you need, just instantiate Oriel directly (you can pass a
+  selector as an argument to the constructor):
+
+    var mySlideshow = new Oriel("selector");
+
+
+jquery dependency
+-----------------
+
+  Oriel uses jQuery. I'd love to get away from this. In the
+  future I imagine providing a very small alternative object
+  with the jQuery API that I use.
+
+development
+-----------
+
+  Inside the oriel directory run
+
+    $ npm install
+
+  Then
+
+    $ grunt
+
+  (you may need to run `npm install -g grunt-cli` first).
+  This runs tests, lint checks, and downloads browser dependencies
+  for the qunit tests.
+
+license
+-------
+
+  MIT. See the LICENSE file.
 
 -----------------------------------------------
-Michael Hoy | michael.john.hoy@gmail.com | 2012
+Michael Hoy | michael.john.hoy@gmail.com | 2014

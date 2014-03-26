@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>QUnit Test Runner: jQuery 1.10</title>
+
+  <link rel='stylesheet' href='lib/qunit/qunit-1.11.0.css'>
+
+  <script src='lib/jquery/jquery-2.0.3.js'></script>
+
+  <script src='../src/oriel.js'></script>
+
+  <script src='lib/qunit/qunit-1.11.0.js'></script>
+
+  <script src='tests.js'></script>
+</head>
+
+<body>
+  <div id="qunit"></div> <!-- QUnit fills this with results, etc -->
+  <div id='qunit-fixture'>
+
+    <!-- any HTML you want to be present in each test (will be reset for each test) -->
+
+    <div id='empty-div'></div>
+
+    <ul id='a-list'>
+      <li>Item 1</li>
+      <li>Item 2</li>
+    </ul>
+
+    <ul id='my-images'>
+      <li>
+        <a href="img/1.jpg">
+          <img src="img/1-thumb.jpg">
+          My image 1
+        </a>
+      </li>
+      <li data-caption="Alternative caption data">
+        <a href="img/2.jpg">
+          <img src="img/2-thumb.jpg">
+          My image 2
+        </a>
+      </li>
+    </ul>
+
+    <!-- used to test Oriel.prototype.analyze in (some) isolation -->
+    <ul id='my-images-source'>
+      <div class="oriel-source">
+        <li>
+          <a href="img/1.jpg">
+            <img src="img/1-thumb.jpg">
+            My image 1
+          </a>
+        </li>
+        <li data-caption="Alternative caption data">
+          <a href="img/2.jpg">
+            <img src="img/2-thumb.jpg">
+            My image 2
+          </a>
+        </li>
+      </div>
+    </ul><!-- /#my-images-source -->
+
+    <ul id="a-long-list">
+      <li>
+        <p>abarticular</p>
+      </li>
+      <li>
+        <p>volitiency</p>
+      </li>
+      <li>
+        <p>sylvicoline</p>
+      </li>
+      <li>
+        <p>dodecastyle</p>
+      </li>
+      <li>
+        <p>huddock</p>
+      </li>
+      <li>
+        <p>acetacetic</p>
+      </li>
+      <li>
+        <p>canalage</p>
+      </li>
+      <li>
+        <p>Fagelia</p>
+      </li>
+      <li>
+        <p>metatrophic</p>
+      </li>
+    </ul><!-- /#a-long-list -->
+  </div>
+
+</body>
+</html>
