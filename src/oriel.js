@@ -424,13 +424,13 @@
 
   Oriel.indexesOfNeighbors = indexesOfNeighbors;
 
-  window.Oriel = Oriel;
-
   Oriel.plugins = {};
   Oriel.register_plugin = function(proto) {
     var name = proto.name;
     if (!name) throw 'Plugin requires name to be set';
     Oriel.plugins[name] = proto;
   };
+
+  window.Oriel = Oriel;
 
 })(jQuery, this);
