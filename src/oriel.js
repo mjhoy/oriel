@@ -55,12 +55,17 @@
     this.thumbs = [];
     this.captions = [];
     this.originalElements = [];
+    this.hooks = {
+      init: [],
+      set: []
+    };
 
     if (!_initializing) {
       selector = selector ? selector : this.selector;
       if (!selector) throw("Oriel: no selector set");
       this.selector = selector;
       this.el = $(selector);
+      this.addPlugins();
       this.init();
     }
   };
@@ -112,6 +117,8 @@
     prefetch: 3,
 
     allowLoop: true,
+
+    plugins: {},
 
     // Return the element to be used for an oriel item.
     // This will be wrapped in an .oriel-item div.
@@ -195,6 +202,7 @@
     init: function() {
       this.setupDom();
       this.analyze();
+      this.trigger('init');
       this.set(0);
     },
 
@@ -305,6 +313,7 @@
 
       this.updateStatus();
 
+      this.trigger('set');
       return this;
     },
 
@@ -354,8 +363,42 @@
     buildWrappedItem: function(el) {
       var div = divWithClass(domClass.item);
       return div.append(this.buildItem(el));
-    }
+    },
 
+    addPlugins: function() {
+      for(var key in Oriel.plugins) {
+        if (_hasProp.call(Oriel.plugins, key)) {
+          if (_hasProp.call(this.plugins, key)) {
+            this.plugins[key] = this.instantiatePlugin(Oriel.plugins[key]);
+          }
+        }
+      }
+    },
+
+    instantiatePlugin: function(proto) {
+      function K() {}
+      K.prototype = proto;
+      var plugin = new K();
+      for (var hook in proto.hooks)
+        if (_hasProp.call(proto.hooks, hook))
+          this.addHook(plugin, hook, proto.hooks[hook]);
+      return plugin;
+    },
+
+    addHook: function(object, hook, fn) {
+      var self = this;
+      this.hooks[hook].push(function() {
+        fn.call(object, self);
+      });
+    },
+
+    trigger: function(hook) {
+      var hooks = this.hooks,
+          i,l;
+      for(i = 0, l = hooks[hook].length; i<l; i++) {
+        hooks[hook][i].call(this);
+      }
+    }
   };
 
   // Simple subclassing.
@@ -382,5 +425,12 @@
   Oriel.indexesOfNeighbors = indexesOfNeighbors;
 
   window.Oriel = Oriel;
+
+  Oriel.plugins = {};
+  Oriel.register_plugin = function(proto) {
+    var name = proto.name;
+    if (!name) throw 'Plugin requires name to be set';
+    Oriel.plugins[name] = proto;
+  };
 
 })(jQuery, this);

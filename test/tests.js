@@ -516,3 +516,62 @@ test("custom setLocation function", function() {
   o.next();
   deepEqual(calls, [0,1]);
 });
+
+module("plugins");
+
+test("is not instantiated without option set", function() {
+  Oriel.register_plugin({
+    name: "myPlugin",
+    foo: "bar"
+  });
+  var o = Oriel.create({
+    selector: "#my-images"
+  });
+  ok(!o.plugins.myPlugin);
+});
+
+test("is instantiated with option set", function() {
+  Oriel.register_plugin({
+    name: "myPlugin",
+    foo: "bar"
+  });
+  var o = Oriel.create({
+    selector: "#my-images",
+    plugins: { myPlugin: true }
+  });
+
+  ok(o.plugins.myPlugin);
+  equal(o.plugins.myPlugin.foo, "bar");
+});
+
+test("hook methods", function() {
+  var initCalls = [];
+  var setCalls = [];
+
+  Oriel.register_plugin({
+    name: "myPlugin",
+    foo: "bar",
+    hooks: {
+      init: function(oriel) {
+        equal(this.foo, "bar");
+        initCalls.push(["init called!", oriel.currentIndex]);
+      },
+      set: function(oriel) {
+        setCalls.push(["set called!", oriel.currentIndex]);
+      },
+    }
+  });
+
+  var o = Oriel.create({
+    selector: "#my-images",
+    plugins: { myPlugin: true }
+  });
+
+  deepEqual(initCalls, [["init called!", undefined]]);
+  deepEqual(setCalls, [["set called!", 0]]);
+
+  o.set(1);
+  deepEqual(setCalls,
+            [["set called!", 0],
+             ["set called!", 1]]);
+});
