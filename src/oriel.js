@@ -89,9 +89,9 @@
 
   var sel = (function() {
     var obj = {};
-    $.each( domClass, function ( k, v ) {
+    $.each(domClass, function(k, v) {
       obj[k] = '.' + v;
-    } );
+    });
     return obj;
   }());
 
