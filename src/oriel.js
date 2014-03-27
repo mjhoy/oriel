@@ -95,8 +95,15 @@
     return obj;
   }());
 
-  // Oriel object methods
   Oriel.prototype = {
+
+    // ----------------
+    // App specific API
+    // ----------------
+    // These methods and properties are used by the
+    // core API where custom behavior might be desireable
+    // (e.g., finding captions, selectors, etc). You
+    // may override these.
 
     selector: undefined,
 
@@ -105,6 +112,84 @@
     prefetch: 3,
 
     allowLoop: true,
+
+    // Return the element to be used for an oriel item.
+    // This will be wrapped in an .oriel-item div.
+    buildItem: function(el) {
+      if ($.isFunction(this.getFull))
+        return $("<img>").attr({src: this.getFull(el)});
+      return el.clone();
+    },
+
+    // Returns the "full" image location for an element.
+    getFull: function(el) {
+      if (el.attr('src'))
+        return el.attr('src');
+      if (el.attr('href'))
+        return el.attr('href');
+      if (el.find('img').length > 0 )
+        return el.find('img').attr('src');
+
+      return undefined;
+    },
+
+    // Returns the "thumb" image location for an element.
+    getThumb: function(el) {
+      if (el.find('img').length > 0)
+        return el.find('img').attr('src');
+
+      return undefined;
+    },
+
+    setCaption: function(caption, index) {
+      $(sel.caption, this.el).html(caption);
+    },
+
+    setLocation: function(index) {
+      var num = index + 1,
+          total = this.items.length;
+      $(sel.location, this.el).text(num + " of " + total);
+    },
+
+    getCaption: function(el) {
+      if (el.attr('data-caption'))
+        return el.attr('data-caption');
+      if (el.find('.caption').length > 0)
+        return el.find('.caption').html();
+      if (el.find( 'p' ).length > 0)
+        return el.find('p').html();
+
+      return undefined;
+    },
+
+    // Override for custom "status" elements.
+    statusSetup: function() {
+      var el = this.el,
+          status     = $( "<div class='" + domClass.status + "'>" ),
+          navigation = $( "<div class='" + domClass.navigation + "'>" ),
+          statusContent = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
+                             "<span class='" + domClass.location + "'></span>" +
+                             " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
+          caption    = $( "<div class='" + domClass.caption + "'>" );
+      status.prepend( caption ).
+        append( navigation.prepend( statusContent ) );
+      $( sel.wrapper, el ).prepend( status );
+    },
+
+    // Override for custom event handling.
+    // By default, sets next and previous links to
+    // call next() and prev().
+    handlerSetup : function() {
+      var self = this,
+          el = this.el;
+      $(sel.nextLink, el).click(function() { self.next(); return false; });
+      $(sel.prevLink, el).click(function() { self.prev(); return false; });
+    },
+
+    // --------
+    // Core api
+    // --------
+    // You should probably not override these methods.
 
     // Initialize the slideshow.
     init: function() {
@@ -136,6 +221,8 @@
         appendTo(stage);
     },
 
+    // Actually adds an item to the document, causing
+    // any <img> elements to load.
     load: function(index) {
       var item = this.items[index],
           self = this;
@@ -214,7 +301,6 @@
         item.addClass(domClass.active);
         if ($.isFunction(this.onItemChange))
           this.onItemChange(item);
-        // call onImageChange (=> onItemChange?)
       }
 
       this.updateStatus();
@@ -268,73 +354,6 @@
     buildWrappedItem: function(el) {
       var div = divWithClass(domClass.item);
       return div.append(this.buildItem(el));
-    },
-
-    // Return the element to be used for an oriel item.
-    // This will be wrapped in an .oriel-item div.
-    buildItem: function(el) {
-      if ($.isFunction(this.getFull))
-        return $("<img>").attr({src: this.getFull(el)});
-      return el.clone();
-    },
-
-    setCaption: function(caption, index) {
-      $(sel.caption, this.el).html(caption);
-    },
-
-    setLocation: function(index) {
-      var num = index + 1,
-          total = this.items.length;
-      $(sel.location, this.el).text(num + " of " + total);
-    },
-
-    getCaption: function(el) {
-      if (el.attr('data-caption'))
-        return el.attr('data-caption');
-      if (el.find('.caption').length > 0)
-        return el.find('.caption').html();
-      if (el.find( 'p' ).length > 0)
-        return el.find('p').html();
-
-      return undefined;
-    },
-
-    statusSetup: function() {
-      var el = this.el,
-          status     = $( "<div class='" + domClass.status + "'>" ),
-          navigation = $( "<div class='" + domClass.navigation + "'>" ),
-          statusContent = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
-                             "<span class='" + domClass.location + "'></span>" +
-                             " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
-          caption    = $( "<div class='" + domClass.caption + "'>" );
-      status.prepend( caption ).
-        append( navigation.prepend( statusContent ) );
-      $( sel.wrapper, el ).prepend( status );
-    },
-
-    handlerSetup : function() {
-      var self = this,
-          el = this.el;
-      $(sel.nextLink, el).click(function() { self.next(); return false; });
-      $(sel.prevLink, el).click(function() { self.prev(); return false; });
-    },
-
-    getFull: function(el) {
-      if (el.attr('src'))
-        return el.attr('src');
-      if (el.attr('href'))
-        return el.attr('href');
-      if (el.find('img').length > 0 )
-        return el.find('img').attr('src');
-
-      return undefined;
-    },
-
-    getThumb: function(el) {
-      if (el.find('img').length > 0)
-        return el.find('img').attr('src');
-
-      return undefined;
     }
 
   };
