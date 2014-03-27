@@ -99,6 +99,7 @@
 
     allowLoop: true,
 
+    // Initialize the slideshow.
     init: function() {
       this.setupDom();
       this.analyze();
