@@ -11,11 +11,14 @@
 
   var version = "1.0.0";
 
+  // Internal variable we use when subclassing.
   var _initializing = false;
 
   // Use jQuery's `inArray` rather than Array.prototype.indexOf
   // for compatibility.
   var inArray = $.inArray;
+
+  var _hasProp = {}.hasOwnProperty;
 
   // Returns the indexes `k` items away from index `n` for an
   // array of length `len`. Useful for getting nearby images in
@@ -43,7 +46,9 @@
     return arr;
   };
 
-  var Oriel = function (selector) {
+  // The Oriel constructor. The `selector` parameter may be
+  // omitted only if a `selector` property is defined.
+  var Oriel = function(selector) {
     this.currentIndex = undefined;
     this.currentItem = undefined;
     this.items = [];
@@ -51,7 +56,7 @@
     this.captions = [];
     this.originalElements = [];
 
-    if(!_initializing) {
+    if (!_initializing) {
       selector = selector ? selector : this.selector;
       if (!selector) throw("Oriel: no selector set");
       this.selector = selector;
@@ -60,12 +65,12 @@
     }
   };
 
-  var _hasProp = {}.hasOwnProperty;
-
+  // Helper function to generate a jQuery-wrapped div.
   var divWithClass = function(klass) {
     return $('<div class="' + klass +'"></div>');
   };
 
+  // The classes we will use for Oriel elements.
   var domClass = {
     oriel        : 'oriel',
     wrapper      : 'oriel-wrapper',
@@ -90,7 +95,9 @@
     return obj;
   }());
 
+  // Oriel object methods
   Oriel.prototype = {
+
     selector: undefined,
 
     itemSelector: 'li',
@@ -216,7 +223,11 @@
     },
 
     updateStatus: function() {
-
+      var index = this.currentIndex;
+      if ($.isFunction(this.setLocation))
+        this.setLocation(this.currentIndex);
+      if ($.isFunction(this.setCaption))
+        this.setCaption(this.captions[index], index);
     },
 
     analyze: function() {
@@ -268,11 +279,13 @@
     },
 
     setCaption: function(caption, index) {
-
+      $(sel.caption, this.el).html(caption);
     },
 
     setLocation: function(index) {
-
+      var num = index + 1,
+          total = this.items.length;
+      $(sel.location, this.el).text(num + " of " + total);
     },
 
     getCaption: function(el) {

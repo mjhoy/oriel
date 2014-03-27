@@ -464,4 +464,55 @@ test("no allow loop", function() {
   equal(8, o.currentIndex);
 });
 
-module("updateStatus");
+module("setCaption");
+
+test("sets the caption div", function() {
+  var o = Oriel.create({
+    selector: '#my-images',
+    getCaption: function(el) { return el.text(); }
+  });
+
+  present("#my-images .oriel-caption:contains('My image 1')");
+
+  o.set(1);
+  present("#my-images .oriel-caption:contains('My image 2')");
+});
+
+test("custom setCaption function", function() {
+  calls = [];
+  var o = Oriel.create({
+    selector: '#my-images',
+    getCaption: function(el) { return $.trim(el.text()); },
+    setCaption: function(c, i) { calls.push([c, i]); }
+  });
+
+  deepEqual(calls, [["My image 1", 0]]);
+
+  calls = [];
+  o.set(1);
+  deepEqual(calls, [["My image 2", 1]]);
+});
+
+module("setLocation");
+
+test("sets the location", function() {
+  var o = Oriel.create({
+    selector: "#a-long-list"
+  });
+
+  present("#a-long-list .oriel-location:contains('1 of 9')");
+  o.next();
+  present("#a-long-list .oriel-location:contains('2 of 9')");
+});
+
+test("custom setLocation function", function() {
+  calls = [];
+
+  var o = Oriel.create({
+    selector: "#a-long-list",
+    setLocation: function(i) { calls.push(i); }
+  });
+  deepEqual(calls, [0]);
+  o.next();
+  deepEqual(calls, [0,1]);
+});
