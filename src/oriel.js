@@ -9,7 +9,7 @@
 
   "use strict";
 
-  var version = "1.0.0";
+  var version = "1.0.0-beta1";
 
   // Internal variable we use when subclassing.
   var _initializing = false;
@@ -430,6 +430,9 @@
     if (!name) throw 'Plugin requires name to be set';
     Oriel.plugins[name] = proto;
   };
+
+  Oriel.domClass = domClass;
+  Oriel.sel = sel;
 
   window.Oriel = Oriel;
 

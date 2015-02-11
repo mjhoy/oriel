@@ -575,3 +575,10 @@ test("hook methods", function() {
             [["set called!", 0],
              ["set called!", 1]]);
 });
+
+module("class properties");
+
+test("includes domClass and sel", function () {
+  equal(Oriel.domClass.wrapper, "oriel-wrapper");
+  equal(Oriel.sel.wrapper,     ".oriel-wrapper");
+});
