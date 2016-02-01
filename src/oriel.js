@@ -106,7 +106,7 @@
 
   // The classes we will use in constructing new elements.
   var domClass = {
-    oriel           : 'oriel',
+    oriel        : 'oriel',
     wrapper      : 'oriel-wrapper',
     stage        : 'oriel-stage',
     source       : 'oriel-source',
