@@ -2,30 +2,28 @@
   | |---------|
   | | |----------|
   | | |          |
-  |-| |  <3<3<3  |
+  |-| |          |
     |-|          |
       |----------|
 
-  oriel: the lazy slideshow
+  oriel: simple javascript slideshow library
 
 
 what is this?
 -------------
 
-  Oriel is yet another javascript slideshow library.
-  It essentially works by shuffling CSS classes around.
+  Oriel is yet another javascript slideshow library. It essentially
+  works by shuffling CSS classes around.
 
-  By default it limits the number of elements that are
-  loaded in the DOM by the "nearest neighbors" of whatever
-  slide the user is on. Hence it's laziness. Ideally this
-  avoids loading a bajillion large image files on
-  page load.
+  By default it limits the number of elements that are loaded in the
+  DOM by the "nearest neighbors" of whatever slide the user is
+  on. Hence it's laziness. Ideally this avoids loading a bajillion
+  large image files on page load.
 
-  Oriel is somewhat minimalist and won't do everything
-  "out of the box". It does require a little bit of
-  familiarity with its API. That's why I've kept it as
-  simple as possible, and it should be possible to read
-  all the code and understand it in an hour or two.
+  Oriel is somewhat minimalist and won't do everything "out of the
+  box". It does require a little bit of familiarity with its
+  API. That's why I've kept it as simple as possible, and it should be
+  possible to read all the code and understand it in an hour or two.
 
 
 examples
@@ -58,15 +56,15 @@ examples
 what's this `Oriel.create({..})` business?
 ------------------------------------------
 
-  Oriel.create is a convienence function for instantiating
-  an object of a subclass created by  Oriel.extend(..).
-  Oriel.extend is a tiny helper function (inspired by John Resig's
-  "simple Javascript inheritance" post) that will return a
-  "subclass" of Oriel. The properties of the object that you pass
-  in overrides the base implementation.
+  Oriel.create is a convienence function for instantiating an object
+  of a subclass created by Oriel.extend(..). Oriel.extend is a tiny
+  helper function (inspired by John Resig's "simple Javascript
+  inheritance" post) that will return a "subclass" of Oriel. The
+  properties of the object that you pass in overrides the base
+  implementation.
 
-  There is no implementation of "super", as I don't see a
-  good reason for it now.
+  There is no implementation of "super", as I don't see a good reason
+  for it now.
 
     // this...
     var mySlideshow = Oriel.create({..})
@@ -78,9 +76,9 @@ what's this `Oriel.create({..})` business?
     var MySlideshowClass = Oriel.extend({..});
     var mySlideshow = new MySlideshowClass;
 
-  If the default implementation of every function is what
-  you need, just instantiate Oriel directly (you can pass a
-  selector as an argument to the constructor):
+  If the default implementation of every function is what you need,
+  just instantiate Oriel directly (you can pass a selector as an
+  argument to the constructor):
 
     var mySlideshow = new Oriel("selector");
 
@@ -88,9 +86,10 @@ what's this `Oriel.create({..})` business?
 jquery dependency
 -----------------
 
-  Oriel uses jQuery. I'd love to get away from this. In the
-  future I imagine providing a very small alternative object
-  with the jQuery API that I use.
+  Oriel uses jQuery. I'd love to get away from this. In the future I
+  imagine providing a very small alternative object with the jQuery
+  API that I use.
+
 
 development
 -----------
@@ -103,9 +102,10 @@ development
 
     $ grunt
 
-  (you may need to run `npm install -g grunt-cli` first).
-  This runs tests, lint checks, and downloads browser dependencies
-  for the qunit tests.
+  (you may need to run `npm install -g grunt-cli` first). This runs
+  tests, lint checks, and downloads browser dependencies for the qunit
+  tests.
+
 
 license
 -------
