@@ -112,6 +112,22 @@ module(".statusSetup");
 
 test("adds status", function () {
   var o = new TestSetUpDom('#a-list');
+  var prepended = $('#a-list > .oriel-wrapper > div').first();
+  ok(prepended.hasClass(Oriel.domClass.status),
+     'first element is status');
+
+  var o2 = new (Oriel.extend({
+    analyze: noop,
+    set: noop,
+    prependStatus: false
+  }))('#a-list');
+  var appended = $('#a-list > .oriel-wrapper > div').last();
+  ok(appended.hasClass(Oriel.domClass.status),
+     'last element is status');
+});
+
+test("appends status is prependStatus is set to false", function() {
+  var o = new TestSetUpDom('#a-list');
   var status = $('#a-list > .oriel-wrapper > .oriel-status');
   ok($('> .oriel-caption', status)[0],
      "caption div");

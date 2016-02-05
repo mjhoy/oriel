@@ -169,6 +169,10 @@
       return undefined;
     },
 
+    // Should the 'status' div (with caption, location and navigation)
+    // be prepended to the oriel wrapper? If false it is appended.
+    prependStatus: true,
+
     // Override for custom "status" elements.
     statusSetup: function() {
       var el = this.el,
@@ -180,7 +184,11 @@
           caption    = divWithClass(domClass.caption);
       status.prepend(caption).
         append(navigation.prepend(statusContent));
-      $(sel.wrapper, el).prepend(status);
+      if (this.prependStatus) {
+        $(sel.wrapper, el).prepend(status);
+      } else {
+        $(sel.wrapper, el).append(status);
+      }
     },
 
     // Override for custom event handling.
