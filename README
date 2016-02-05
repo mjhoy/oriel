@@ -132,6 +132,9 @@ development (nixos)
     # now, to run tests:
     $ ./node_modules/.bin/grunt
 
+    # or:
+    $ npm test
+
 
 license
 -------
