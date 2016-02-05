@@ -163,7 +163,7 @@
         return el.attr('data-caption');
       if (el.find('.caption').length > 0)
         return el.find('.caption').html();
-      if (el.find( 'p' ).length > 0)
+      if (el.find('p').length > 0)
         return el.find('p').html();
 
       return undefined;
@@ -172,15 +172,15 @@
     // Override for custom "status" elements.
     statusSetup: function() {
       var el = this.el,
-          status     = $( "<div class='" + domClass.status + "'>" ),
-          navigation = $( "<div class='" + domClass.navigation + "'>" ),
-          statusContent = $( "<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
-                             "<span class='" + domClass.location + "'></span>" +
-                             " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
-          caption    = $( "<div class='" + domClass.caption + "'>" );
-      status.prepend( caption ).
-        append( navigation.prepend( statusContent ) );
-      $( sel.wrapper, el ).prepend( status );
+          status     = divWithClass(domClass.status),
+          navigation = divWithClass(domClass.navigation),
+          statusContent = $("<a href='#' class='" + domClass.prevLink + "'>Prev</a> " +
+                            "<span class='" + domClass.location + "'></span>" +
+                            " <a href='#' class='" + domClass.nextLink + "'>Next</a>" ),
+          caption    = divWithClass(domClass.caption);
+      status.prepend(caption).
+        append(navigation.prepend(statusContent));
+      $(sel.wrapper, el).prepend(status);
     },
 
     // Override for custom event handling.
