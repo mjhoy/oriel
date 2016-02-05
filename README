@@ -106,6 +106,10 @@ development
   tests, lint checks, and downloads browser dependencies for the qunit
   tests.
 
+  Currently the tests execute correctly with nodejs 0.10, there
+  appears to be problems with later versions. A travis build status is
+  available here: https://travis-ci.org/mjhoy/oriel
+
 
 license
 -------
