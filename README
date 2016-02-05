@@ -111,6 +111,28 @@ development
   available here: https://travis-ci.org/mjhoy/oriel
 
 
+development (nixos)
+-------------------
+
+  There doesn't seem to be a clear way to set up a nodejs/npm
+  environment with NixOS right now. Here's what I do:
+
+    # install node and npm
+    $ nix-env -iA nixpkgs.nodejs-0_10
+
+    # if we let npm install the phantom binary, doesn't seem to work
+    $ nix-env -iA nixpkgs.phantomjs   
+
+    # now install test dependencies; install grunt-cli separately and
+    # not globally (this is not possible with nixos anyway)
+    $ cd path/to/oriel
+    $ npm install
+    $ npm install grunt-cli
+
+    # now, to run tests:
+    $ ./node_modules/.bin/grunt
+
+
 license
 -------
 
